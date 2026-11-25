@@ -7,7 +7,6 @@ import {
   Menu,
   Presentation,
   Sigma,
-  ShieldAlert,
   X,
 } from 'lucide-react';
 import type { ModuleId } from '../types/analytics';
@@ -76,10 +75,14 @@ export const Layout: React.FC<LayoutProps> = ({
     <div className="flex flex-col h-full bg-[#0f294a] text-white">
       {/* Marca institucional */}
       <div className="px-5 py-5 border-b border-white/10">
+        <div className="bg-white rounded-2xl p-3 mb-4 flex justify-center shadow-md">
+          <img
+            src="/logos/Versiones_Logo_Unimayor-01.png"
+            alt="Institución Universitaria Colegio Mayor del Cauca"
+            className="h-28 w-auto"
+          />
+        </div>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-sky-500/20 border border-sky-400/30 flex items-center justify-center shrink-0">
-            <ShieldAlert className="w-5 h-5 text-sky-300" />
-          </div>
           <div className="min-w-0">
             <p className="text-[11px] font-semibold uppercase tracking-wider text-sky-300">
               Unimayor · Ing. Informática
