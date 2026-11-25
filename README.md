@@ -4,11 +4,12 @@ Plataforma web académica interdisciplinaria que integra las asignaturas **Elect
 
 ### Integrantes y Orden Secuencial de Sustentación (15 min)
 1. **Jessica Vanesa Acosta Galíndez** (Diapositivas 1–3 · 1 min 45 s): Portada, introducción y planteamiento del problema.
-2. **Andrés Felipe Suaza Cerón** (Diapositivas 4–6 · 2 min 00 s): Objetivos, fuentes oficiales Socrata y metodología.
-3. **Duban Alexander Gómez Hoyos** (Diapositivas 7–10 · 3 min 00 s): Limpieza ETL, análisis descriptivo, dashboard y componente predictivo (Electiva III).
-4. **Yeison Rengifo** (Diapositivas 11–12 · 2 min 45 s · *Solo Estadística Inferencial*): Experimento aleatorio, reglas de probabilidad, independencia y Teorema de Bayes.
-5. **Daniel Andrés Mera** (Diapositivas 13–15 · 3 min 15 s · *Poisson y Ecuaciones*): Modelo de Poisson (Grupo 2), ecuaciones PMF/CDF, TLC ($S_7$), bondad $\chi^2$, IC 95% y contraste $z$.
-6. **Santiago Alexis Ordoñez Segura** (Diapositivas 16–18 · 2 min 15 s): Principales hallazgos, conclusiones y cierre.
+2. **Andrés Felipe Suaza Cerón** (Diapositivas 4–6 · 2 min 05 s): Objetivos, fuentes oficiales Socrata y metodología.
+3. **Santiago Alexis Ordoñez Segura** (Diapositiva 7 · 50 s): Preparación y limpieza ETL (corrección `DD/MM/AAAA` y nulos estructurales).
+4. **Duban Alexander Gómez Hoyos** (Diapositivas 8–10 · 2 min 15 s): Análisis descriptivo, dashboard y componente predictivo (Electiva III).
+5. **Yeison Rengifo** (Diapositivas 11–12 · 2 min 45 s): Experimento aleatorio, reglas de probabilidad, independencia y Teorema de Bayes.
+6. **Daniel Andrés Mera** (Diapositivas 13–15 · 3 min 15 s): Modelo de Poisson (Grupo 2), ecuaciones PMF/CDF, TLC ($S_7$), bondad $\chi^2$, IC 95% y contraste $z$.
+7. **Santiago Alexis Ordoñez Segura** (Diapositivas 16–18 · 2 min 05 s): Principales hallazgos, conclusiones y cierre.
 
 ---
 

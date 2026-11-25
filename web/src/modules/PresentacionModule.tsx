@@ -1121,7 +1121,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
               <div className="flex items-center gap-2 text-xs">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#0b1f3b] font-bold">
                   <UserCheck className="w-3.5 h-3.5 text-blue-700" />
-                  Turno {assignment.blockOrder}/6 · {assignment.presenter}
+                  Turno {assignment.blockOrder}/7 · {assignment.presenter}
                 </span>
                 <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 font-mono font-semibold">
                   <Clock className="w-3 h-3" />
@@ -1140,7 +1140,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
         {/* Pie con expositor y bloque */}
         <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-[11px] text-slate-500">
           <span>
-            Turno {assignment.blockOrder}/6:{' '}
+            Turno {assignment.blockOrder}/7:{' '}
             <strong className="text-[#0b1f3b]">{assignment.presenter}</strong> ·{' '}
             <span className="text-blue-700 font-semibold">{assignment.level}</span>
           </span>
