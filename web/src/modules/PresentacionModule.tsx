@@ -62,7 +62,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
         await document.exitFullscreen();
       }
     } catch {
-      // Silencio si el navegador bloquea fullscreen programático
+      // Ignora bloqueo de fullscreen programático
     }
   }, []);
 
@@ -89,7 +89,6 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [goNext, goPrev, toggleFullscreen]);
 
-  // Datos reales pre-computados para gráficos de diapositivas
   const nationalAgg = useMemo(
     () =>
       aggregateDashboard(data.cubeCore, data.cubeMun, {
@@ -139,14 +138,16 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
 
   const { auditoria_etl, estadisticas_descriptivas, frecuencias } = data.dataScience;
 
+  // 18 diapositivas ordenadas en 6 bloques 100% consecutivos por expositor
   const slides: { title: string; tag: string; render: () => React.ReactNode }[] = [
+    // BLOQUE 1 (Slides 1–3): Jessica Vanesa Acosta Galíndez
     {
       tag: 'Portada',
       title: 'Portada del Proyecto Académico',
       render: () => (
-        <div className="h-full flex flex-col justify-between bg-gradient-to-br from-[#0f294a] via-[#133663] to-[#1d4ed8] text-white p-6 sm:p-10 rounded-2xl">
+        <div className="h-full flex flex-col justify-between bg-gradient-to-br from-[#081529] via-[#0f294a] to-[#1d4ed8] text-white p-6 sm:p-10 rounded-2xl shadow-inner">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-sky-400/20 border border-sky-300/30">
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-sky-400/20 border border-sky-300/30">
               {PROJECT_META.institution} · {PROJECT_META.program}
             </span>
             <span className="text-xs font-mono text-sky-200">
@@ -175,7 +176,9 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-white/95">
                 {PROJECT_META.teamMembers.map((m) => (
-                  <p key={m.name}>• {m.name}</p>
+                  <p key={m.name}>
+                    • {m.name} <span className="text-sky-300/80">({m.slides})</span>
+                  </p>
                 ))}
               </div>
             </div>
@@ -200,7 +203,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
       render: () => (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full items-center">
           <div className="lg:col-span-7 space-y-4">
-            <h3 className="text-2xl font-bold text-[#0f294a]">
+            <h3 className="text-2xl font-extrabold text-[#0b1f3b]">
               ¿Por qué analizar probabilísticamente el hurto en Colombia?
             </h3>
             <p className="text-sm text-slate-600 leading-relaxed">
@@ -209,11 +212,11 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
               agregadas suelen ocultar contrastes críticos entre modalidades y regiones.
             </p>
             <ul className="space-y-2.5 text-sm text-slate-700">
-              <li className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <li className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
                 <strong>Rigor técnico:</strong> Convierte 1.35 millones de registros públicos en
                 indicadores reproducibles y auditables.
               </li>
-              <li className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <li className="p-3.5 rounded-xl bg-blue-50/60 border border-blue-200">
                 <strong>Enfoque dual:</strong> Combina ETL y analítica visual (Electiva III) con
                 probabilidad, Teorema de Bayes y Modelo de Poisson (Estadística Inferencial).
               </li>
@@ -228,9 +231,9 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
             ].map(([val, lbl]) => (
               <div
                 key={lbl}
-                className="p-5 rounded-2xl bg-blue-50/70 border border-blue-100 text-center"
+                className="p-5 rounded-2xl bg-gradient-to-br from-blue-50 to-sky-50 border border-blue-100 text-center shadow-2xs"
               >
-                <p className="text-2xl font-extrabold font-mono text-[#0f294a]">{val}</p>
+                <p className="text-2xl font-extrabold font-mono text-[#0b1f3b]">{val}</p>
                 <p className="text-xs text-slate-600 mt-1">{lbl}</p>
               </div>
             ))}
@@ -243,7 +246,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
       title: 'Planteamiento del Problema y Pregunta Principal',
       render: () => (
         <div className="space-y-6 my-auto">
-          <div className="p-6 rounded-2xl bg-[#0f294a] text-white space-y-2">
+          <div className="p-6 rounded-2xl bg-gradient-to-r from-[#0b1f3b] to-[#1d4ed8] text-white space-y-2 shadow-md">
             <p className="text-xs uppercase tracking-widest text-sky-300 font-bold">
               Pregunta Central de Investigación
             </p>
@@ -255,23 +258,23 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-              <strong className="text-[#0f294a] block mb-1">Situación Estudiada</strong>
+              <strong className="text-[#0b1f3b] block mb-1">Situación Estudiada</strong>
               <p className="text-xs text-slate-600">
-                Alta dispersión de registros en tres endpoints separados de la DIJIN y presencia de
-                inconsistencias de formato de fecha y nulos estructurales.
+                Dispersión de registros en tres endpoints separados de la DIJIN e inconsistencias
+                críticas en el formato de fecha y nulos estructurales.
               </p>
             </div>
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-              <strong className="text-[#0f294a] block mb-1">Enfoque Territorial</strong>
+              <strong className="text-[#0b1f3b] block mb-1">Enfoque Territorial</strong>
               <p className="text-xs text-slate-600">
                 Contraste entre grandes capitales (Bogotá, Medellín, Cali) y contexto regional de
                 Popayán – Cauca (23,578 hechos).
               </p>
             </div>
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-              <strong className="text-[#0f294a] block mb-1">Reto Inferencial</strong>
+              <strong className="text-[#0b1f3b] block mb-1">Reto Inferencial</strong>
               <p className="text-xs text-slate-600">
-                Evaluar independencia entre modalidad y armas, actualización bayesiana y ajuste de
+                Evaluar dependencia entre modalidad y armas, actualización bayesiana y ajuste de
                 Poisson frente a posible sobredispersión.
               </p>
             </div>
@@ -279,14 +282,16 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
         </div>
       ),
     },
+
+    // BLOQUE 2 (Slides 4–6): Andrés Felipe Suaza Cerón
     {
       tag: 'Objetivos',
       title: 'Objetivo General y Objetivos Específicos',
       render: () => (
         <div className="space-y-5 my-auto">
-          <div className="p-5 rounded-2xl bg-blue-50 border border-blue-200">
+          <div className="p-5 rounded-2xl bg-gradient-to-r from-blue-50 to-sky-50 border border-blue-200">
             <p className="text-xs font-bold uppercase text-blue-700 mb-1">Objetivo General</p>
-            <p className="text-base font-bold text-[#0f294a]">
+            <p className="text-base font-bold text-[#0b1f3b]">
               Desarrollar un análisis estadístico y probabilístico integral del hurto en Colombia
               mediante Ciencia de Datos, Modelo de Poisson y Teorema de Bayes sobre Datos Abiertos
               de la Policía Nacional, presentado en una plataforma web interactiva.
@@ -299,7 +304,10 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
               '3. Construir un dashboard analítico con filtros cruzados, mapa geográfico de Colombia e indicadores reales.',
               '4. Formular experimento aleatorio, reglas de probabilidad, Teorema de Bayes, modelo de Poisson (Grupo 2) y pruebas z/χ².',
             ].map((obj) => (
-              <div key={obj} className="p-4 rounded-xl bg-white border border-slate-200 text-slate-700">
+              <div
+                key={obj}
+                className="p-4 rounded-xl bg-white border border-slate-200 text-slate-700 shadow-2xs"
+              >
                 {obj}
               </div>
             ))}
@@ -318,7 +326,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
             real verificada: <strong>01/01/2010 al 31/07/2026</strong>.
           </p>
           <table className="w-full text-left text-xs sm:text-sm border border-slate-200 rounded-xl overflow-hidden">
-            <thead className="bg-slate-100 text-slate-600">
+            <thead className="bg-[#0f294a] text-white">
               <tr>
                 <th className="p-3">ID Socrata</th>
                 <th className="p-3">Modalidades incluidas</th>
@@ -333,10 +341,12 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
                   <td className="p-3 text-right font-mono font-bold">{formatInt(s.filas)}</td>
                 </tr>
               ))}
-              <tr className="bg-blue-50/70 font-bold">
+              <tr className="bg-blue-50 font-bold">
                 <td className="p-3">TOTAL</td>
                 <td className="p-3">7 modalidades · 9 variables por registro</td>
-                <td className="p-3 text-right font-mono">{formatInt(auditoria_etl.hechos_totales)}</td>
+                <td className="p-3 text-right font-mono">
+                  {formatInt(auditoria_etl.hechos_totales)}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -357,11 +367,14 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
               ['1. Ingesta API', 'Paginación Socrata $order=:id en bloques de 50k'],
               ['2. Limpieza', 'Corrección DD/MM/AAAA e imputación explícita'],
               ['3. Descriptivo', 'Frecuencias, medias, medianas, rangos y mapas'],
-              ['4. Probabilidad', 'Axiomas, independencia y actualización de Bayes'],
-              ['5. Poisson (G2)', 'Tasa λ semanal, TLC S₇, IC 95% y pruebas z / χ²'],
-              ['6. Predictivo', 'Ridge vs HistGBR con división temporal 2011–25'],
+              ['4. Predictivo', 'Ridge vs HistGBR con división temporal 2011–25'],
+              ['5. Probabilidad', 'Axiomas, independencia y Teorema de Bayes'],
+              ['6. Poisson (G2)', 'Tasa λ semanal, TLC S₇, χ², IC 95% y prueba z'],
             ].map(([t, d]) => (
-              <div key={t} className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+              <div
+                key={t}
+                className="p-4 rounded-2xl bg-gradient-to-b from-slate-50 to-white border border-slate-200 shadow-2xs"
+              >
                 <p className="text-xs font-bold text-blue-700">{t}</p>
                 <p className="text-xs text-slate-600 mt-1.5">{d}</p>
               </div>
@@ -369,12 +382,14 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
           </div>
           <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-xs sm:text-sm text-emerald-950">
             <strong>Principio de reproducibilidad:</strong> Todos los indicadores del tablero y
-            ecuaciones de esta presentación se calculan en Python y TypeScript directamente sobre
-            los 1,354,442 registros reales, sin datos simulados.
+            ecuaciones de esta presentación se calculan directamente sobre los 1,354,442 registros
+            reales, sin datos simulados.
           </div>
         </div>
       ),
     },
+
+    // BLOQUE 3 (Slides 7–10): Duban Alexander Gómez Hoyos (Electiva III completa)
     {
       tag: 'Limpieza ETL',
       title: 'Preparación y Limpieza de Datos (Antes vs Después)',
@@ -441,7 +456,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center my-auto">
           <div className="lg:col-span-5 space-y-3 text-xs">
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
-              <p className="font-bold text-[#0f294a]">Indicadores Numéricos Reales</p>
+              <p className="font-bold text-[#0b1f3b]">Indicadores Numéricos Reales</p>
               <p>
                 • <strong>Serie Anual (2010–2025):</strong> Media{' '}
                 {formatDec(estadisticas_descriptivas.serie_anual_completa_2010_2025.media)} |
@@ -460,7 +475,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
               </p>
             </div>
             <div className="p-4 rounded-xl bg-blue-50/70 border border-blue-100 space-y-1">
-              <p className="font-bold text-[#0f294a]">Modas Categóricas</p>
+              <p className="font-bold text-[#0b1f3b]">Modas Categóricas</p>
               <p>• Modalidad: {estadisticas_descriptivas.moda_modalidad} (43.07%)</p>
               <p>• Medio: {estadisticas_descriptivas.moda_arma} (48.37%)</p>
               <p>• Territorio: {estadisticas_descriptivas.moda_departamento} (21.54%)</p>
@@ -494,7 +509,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
       render: () => (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 my-auto">
           <div>
-            <p className="text-xs font-bold text-[#0f294a] mb-2">
+            <p className="text-xs font-bold text-[#0b1f3b] mb-2">
               Evolución Anual Nacional (2010–2026*)
             </p>
             <div className="h-64">
@@ -516,7 +531,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
             </div>
           </div>
           <div>
-            <p className="text-xs font-bold text-[#0f294a] mb-2">
+            <p className="text-xs font-bold text-[#0b1f3b] mb-2">
               Top 8 Departamentos / Bogotá D.C.
             </p>
             <div className="h-64">
@@ -530,237 +545,6 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
                 </BarChart>
               </ResponsiveContainer>
             </div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      tag: 'Experimento',
-      title: 'Formulación del Experimento Aleatorio',
-      render: () => (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 my-auto text-sm">
-          <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-            <p className="text-xs font-bold uppercase text-blue-700">
-              Experimento ε₁ (Conteo Temporal — Poisson)
-            </p>
-            <p className="text-slate-700">
-              Observar una semana calendario (lunes a domingo) en Popayán (CT) y registrar la
-              variable aleatoria discreta <strong>X = número de hurtos ocurridos</strong>.
-            </p>
-            <p className="font-mono text-xs bg-white p-2.5 rounded-lg border border-slate-200">
-              Ω₁ = {'{0, 1, 2, 3, ...}'} = ℤ≥₀
-            </p>
-          </div>
-          <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-            <p className="text-xs font-bold uppercase text-sky-700">
-              Experimento ε₂ (Selección de Registro)
-            </p>
-            <p className="text-slate-700">
-              Seleccionar al azar un hecho de la base nacional depurada (N = 1,354,442) y observar
-              su modalidad, departamento y arma/medio.
-            </p>
-            <p className="font-mono text-xs bg-white p-2.5 rounded-lg border border-slate-200">
-              Eventos: A = Motocicletas | B = Arma de Fuego | C = Bogotá
-            </p>
-          </div>
-        </div>
-      ),
-    },
-    {
-      tag: 'Probabilidad',
-      title: 'Reglas de Probabilidad (Con Cifras Reales)',
-      render: () => {
-        const N = data.inferential.total_hechos;
-        const nM = 497736;
-        const nF = 274849;
-        const nMF = data.inferential.mod_x_arma['ARTÍCULO 239. HURTO MOTOCICLETAS']?.['ARMA DE FUEGO'] ?? 0;
-        const pM = nM / N;
-        const pF = nF / N;
-        const pMF = nMF / N;
-        return (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-auto text-xs sm:text-sm">
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
-              <strong className="text-blue-700">Adición (Unión): Motocicletas (M) o Arma de Fuego (F)</strong>
-              <p className="font-mono">P(M ∪ F) = P(M) + P(F) − P(M ∩ F)</p>
-              <p className="font-mono text-[#0f294a]">
-                = {formatProb(pM)} + {formatProb(pF)} − {formatProb(pMF)} ={' '}
-                <strong>{formatProb(pM + pF - pMF)}</strong>
-              </p>
-            </div>
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
-              <strong className="text-sky-700">Multiplicación (Intersección)</strong>
-              <p className="font-mono">P(M ∩ F) = P(M) · P(F | M)</p>
-              <p className="font-mono text-[#0f294a]">
-                = {formatProb(pM)} × {formatProb(nMF / nM)} = <strong>{formatProb(pMF)}</strong> (
-                {formatInt(nMF)} hechos)
-              </p>
-            </div>
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
-              <strong className="text-emerald-700">Complemento</strong>
-              <p className="font-mono">P(Mᶜ) = 1 − P(M) = 1 − {formatProb(pM)}</p>
-              <p className="font-mono text-[#0f294a]">
-                = <strong>{formatProb(1 - pM)}</strong> ({formatPct((1 - pM) * 100)})
-              </p>
-            </div>
-            <div className="p-4 rounded-xl bg-orange-50 border border-orange-200 space-y-1.5">
-              <strong className="text-orange-800">Evaluación de Independencia</strong>
-              <p className="font-mono">
-                P(M)·P(F) = {formatProb(pM * pF)} ≠ P(M ∩ F) = {formatProb(pMF)}
-              </p>
-              <p className="text-orange-950 font-semibold">
-                Son DEPENDIENTES: la modalidad condiciona el arma empleada.
-              </p>
-            </div>
-          </div>
-        );
-      },
-    },
-    {
-      tag: 'Bayes',
-      title: 'Probabilidad Condicional y Teorema de Bayes',
-      render: () => (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center my-auto">
-          <div className="lg:col-span-5 space-y-3 text-xs sm:text-sm">
-            <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 space-y-1">
-              <p className="font-bold text-[#0f294a]">Caso aplicado: Evidencia B = «LLAVE MAESTRA»</p>
-              <p className="text-slate-700">
-                P(Mᵢ | B) = [P(B | Mᵢ)·P(Mᵢ)] / P(B), con P(B) ={' '}
-                <strong className="font-mono">{formatProb(bayesArmaEjemplo.evidence)}</strong>
-              </p>
-            </div>
-            <p className="text-slate-600 leading-relaxed">
-              Mientras Motocicletas tiene una probabilidad previa de{' '}
-              <strong>36.75%</strong> en Colombia, al observar el uso de <em>Llave Maestra</em>{' '}
-              su probabilidad a posteriori asciende al{' '}
-              <strong>
-                {formatPct(
-                  (bayesArmaEjemplo.results.find((r) => r.label === 'Motocicletas')?.posterior ?? 0) *
-                    100
-                )}
-              </strong>{' '}
-              y Automotores sube de 11.73% a{' '}
-              <strong>
-                {formatPct(
-                  (bayesArmaEjemplo.results.find((r) => r.label === 'Automotores')?.posterior ?? 0) *
-                    100
-                )}
-              </strong>
-              .
-            </p>
-          </div>
-          <div className="lg:col-span-7 h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={bayesArmaEjemplo.results.map((r) => ({
-                  modalidad: r.label,
-                  Previa: Number((r.prior * 100).toFixed(1)),
-                  Posteriori: Number((r.posterior * 100).toFixed(1)),
-                }))}
-                layout="vertical"
-                margin={{ left: 10, right: 20 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                <XAxis type="number" unit="%" tick={{ fontSize: 10 }} />
-                <YAxis type="category" dataKey="modalidad" width={125} tick={{ fontSize: 10 }} />
-                <Tooltip formatter={(v: number) => `${v}%`} />
-                <Legend wrapperStyle={{ fontSize: 11 }} />
-                <Bar dataKey="Previa" fill="#94a3b8" />
-                <Bar dataKey="Posteriori" fill="#1d4ed8" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      ),
-    },
-    {
-      tag: 'Poisson (G2)',
-      title: 'Distribución Asignada: Grupo 2 – Poisson (Popayán 2025)',
-      render: () => (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center my-auto">
-          <div className="lg:col-span-5 space-y-3 text-xs">
-            <div className="p-3.5 rounded-xl bg-slate-900 text-sky-300 font-mono">
-              P(X = k) = (e⁻λ · λᵏ) / k! &nbsp;|&nbsp; S₇ ~ Poisson(7λ)
-            </div>
-            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
-              <p className="font-bold text-[#0f294a]">Popayán 2025 · Todas las modalidades</p>
-              <p>
-                52 semanas · 1,896 hechos · <strong>λ = {formatDec(popPoissonAll.lambda)}</strong>{' '}
-                · s² = {formatDec(popPoissonAll.varianza)} (s²/λ ={' '}
-                {formatDec(popPoissonAll.dispersionRatio)})
-              </p>
-              <p>
-                TLC 7 semanas (λ₇ = {formatDec(popClt.lamM)}): P(S₇ &gt; {popClt.c}) exacta ={' '}
-                {formatProb(popClt.exacta)} vs Normal = {formatProb(popClt.normalAprox)}
-              </p>
-            </div>
-            <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 space-y-1">
-              <p className="font-bold text-emerald-900">Popayán 2025 · Hurto Automotores</p>
-              <p className="text-emerald-950">
-                204 hechos · <strong>λ = {formatDec(popPoissonAuto.lambda)}</strong> · s²/λ ={' '}
-                <strong>{formatDec(popPoissonAuto.dispersionRatio)}</strong> (equidispersión ideal;
-                χ² p = {formatProb(popPoissonAuto.chi2Test.pValor)} ≥ 0.05)
-              </p>
-            </div>
-          </div>
-          <div className="lg:col-span-7 h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={popPoissonAuto.pmfComparativa}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="k" tick={{ fontSize: 10 }} />
-                <YAxis tick={{ fontSize: 10 }} />
-                <Tooltip formatter={(v: number) => v.toFixed(4)} />
-                <Legend wrapperStyle={{ fontSize: 11 }} />
-                <Bar dataKey="observado" name="Observado (Automotores)" fill="#93c5fd" />
-                <Line
-                  type="monotone"
-                  dataKey="poisson"
-                  name={`Poisson(λ=${popPoissonAuto.lambda.toFixed(2)})`}
-                  stroke="#0f294a"
-                  strokeWidth={2.5}
-                />
-              </ComposedChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      ),
-    },
-    {
-      tag: 'Inferencia',
-      title: 'Análisis Inferencial: IC 95% y Contraste de Hipótesis (Opcional)',
-      render: () => (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 my-auto text-xs sm:text-sm">
-          <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-            <span className="text-[11px] font-bold uppercase text-blue-700">
-              Unidad 3 · Intervalo de Confianza (Popayán 2025)
-            </span>
-            <p className="font-mono text-xs bg-white p-2.5 rounded-lg border border-slate-200">
-              IC 95% = x̄ ± 1.96·√(x̄ / n)
-            </p>
-            <p>
-              Media semanal muestral: <strong>x̄ = {formatDec(popHyp.xBar)}</strong> (n = 52 semanas)
-            </p>
-            <p>
-              IC 95% Poisson:{' '}
-              <strong className="font-mono text-blue-700">
-                [{formatDec(popHyp.icPoisson[0])} ; {formatDec(popHyp.icPoisson[1])}]
-              </strong>{' '}
-              hurtos/semana.
-            </p>
-          </div>
-          <div className="p-5 rounded-2xl bg-orange-50/70 border border-orange-200 space-y-2">
-            <span className="text-[11px] font-bold uppercase text-orange-800">
-              Unidad 4 · Contraste z (2024 vs 2025 en Popayán)
-            </span>
-            <p className="font-mono text-xs bg-white p-2.5 rounded-lg border border-orange-200">
-              H₀: λ₂₀₂₅ = λ₂₀₂₄ ({formatDec(popHyp.lam0)}) vs H₁: λ₂₀₂₅ ≠ λ₂₀₂₄
-            </p>
-            <p>
-              Estadístico <strong>z = {formatDec(popHyp.zStat)}</strong> | Valor-p &lt; 0.0001
-            </p>
-            <p className="font-semibold text-orange-950">
-              Decisión: Se rechaza H₀ (α = 0.05). La tasa semanal promedio en Popayán disminuyó de
-              42.40 (2024) a 36.46 (2025).
-            </p>
           </div>
         </div>
       ),
@@ -781,7 +565,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
                   key={m.nombre}
                   className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex justify-between items-center"
                 >
-                  <span className="font-semibold text-[#0f294a]">{m.nombre}</span>
+                  <span className="font-semibold text-[#0b1f3b]">{m.nombre}</span>
                   <span className="font-mono text-blue-700">
                     MAE {m.mae} | R² {m.r2}
                   </span>
@@ -816,6 +600,314 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
         </div>
       ),
     },
+
+    // BLOQUE 4 (Slides 11–12): Yeison Rengifo (100% Estadística Inferencial, sin Electiva III)
+    {
+      tag: 'Experimento y Reglas',
+      title: 'Experimento Aleatorio, Reglas de Probabilidad e Independencia',
+      render: () => {
+        const N = data.inferential.total_hechos;
+        const nM = 497736;
+        const nF = 274849;
+        const nMF =
+          data.inferential.mod_x_arma['ARTÍCULO 239. HURTO MOTOCICLETAS']?.['ARMA DE FUEGO'] ?? 0;
+        const pM = nM / N;
+        const pF = nF / N;
+        const pMF = nMF / N;
+        return (
+          <div className="space-y-4 my-auto text-xs">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="p-3.5 rounded-xl bg-[#0f294a] text-white">
+                <span className="text-[10px] font-bold uppercase text-sky-300">
+                  Experimentos y Espacios Muestrales
+                </span>
+                <p className="mt-1">
+                  <strong>ε₁ (Conteo semanal):</strong> Ω₁ = {'{0, 1, 2, ...}'} = ℤ≥₀ (Popayán).
+                  <br />
+                  <strong>ε₂ (Selección registro):</strong> |Ω₂| = {formatInt(N)} hechos.
+                </p>
+              </div>
+              <div className="p-3.5 rounded-xl bg-blue-50 border border-blue-200 text-[#0b1f3b]">
+                <span className="text-[10px] font-bold uppercase text-blue-700">
+                  Eventos Definidos (Motocicletas M y Arma de Fuego F)
+                </span>
+                <p className="mt-1 font-mono">
+                  P(M) = {formatInt(nM)}/{formatInt(N)} = <strong>{formatProb(pM)}</strong> | P(F) ={' '}
+                  <strong>{formatProb(pF)}</strong>
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                <strong className="text-blue-700">1. Adición (Unión)</strong>
+                <p className="font-mono">
+                  P(M ∪ F) = P(M) + P(F) − P(M ∩ F) ={' '}
+                  <strong>{formatProb(pM + pF - pMF)}</strong>
+                </p>
+              </div>
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                <strong className="text-sky-700">2. Multiplicación (Intersección)</strong>
+                <p className="font-mono">
+                  P(M ∩ F) = P(M)·P(F|M) = <strong>{formatProb(pMF)}</strong> ({formatInt(nMF)}{' '}
+                  hechos)
+                </p>
+              </div>
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                <strong className="text-emerald-700">3. Complemento</strong>
+                <p className="font-mono">
+                  P(Mᶜ) = 1 − P(M) = <strong>{formatProb(1 - pM)}</strong> ({formatPct((1 - pM) * 100)})
+                </p>
+              </div>
+              <div className="p-3.5 rounded-xl bg-orange-50 border border-orange-200 space-y-1">
+                <strong className="text-orange-800">4. Prueba de Independencia</strong>
+                <p className="font-mono">
+                  P(M)·P(F) = {formatProb(pM * pF)} ≠ P(M∩F) = {formatProb(pMF)} →{' '}
+                  <strong>DEPENDIENTES</strong>
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      tag: 'Teorema de Bayes',
+      title: 'Probabilidad Condicional y Teorema de Bayes',
+      render: () => (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center my-auto">
+          <div className="lg:col-span-5 space-y-3 text-xs sm:text-sm">
+            <div className="p-4 rounded-xl bg-[#0f294a] text-white space-y-2">
+              <p className="text-[10px] uppercase tracking-wider text-sky-300 font-bold">
+                Ecuación Formal de Bayes
+              </p>
+              <div className="text-sm font-mono flex items-center flex-wrap">
+                <span>P(Mᵢ | B) =</span>
+                <span className="math-frac">
+                  <span>P(B | Mᵢ) · P(Mᵢ)</span>
+                  <span>∑ⱼ P(B | Mⱼ) · P(Mⱼ)</span>
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-200">
+                Evidencia B = «LLAVE MAESTRA» · P(B) ={' '}
+                <strong className="font-mono text-sky-300">
+                  {formatProb(bayesArmaEjemplo.evidence)}
+                </strong>
+              </p>
+            </div>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Al observar <em>Llave Maestra</em>, la probabilidad a posteriori de{' '}
+              <strong>Motocicletas</strong> sube de <strong>36.75%</strong> (previa) a{' '}
+              <strong className="text-blue-700">
+                {formatPct(
+                  (bayesArmaEjemplo.results.find((r) => r.label === 'Motocicletas')?.posterior ?? 0) *
+                    100
+                )}
+              </strong>{' '}
+              y la de <strong>Automotores</strong> sube de 11.73% a{' '}
+              <strong className="text-blue-700">
+                {formatPct(
+                  (bayesArmaEjemplo.results.find((r) => r.label === 'Automotores')?.posterior ?? 0) *
+                    100
+                )}
+              </strong>
+              .
+            </p>
+          </div>
+          <div className="lg:col-span-7 h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={bayesArmaEjemplo.results.map((r) => ({
+                  modalidad: r.label,
+                  Previa: Number((r.prior * 100).toFixed(1)),
+                  Posteriori: Number((r.posterior * 100).toFixed(1)),
+                }))}
+                layout="vertical"
+                margin={{ left: 10, right: 20 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                <XAxis type="number" unit="%" tick={{ fontSize: 10 }} />
+                <YAxis type="category" dataKey="modalidad" width={125} tick={{ fontSize: 10 }} />
+                <Tooltip formatter={(v: number) => `${v}%`} />
+                <Legend wrapperStyle={{ fontSize: 11 }} />
+                <Bar dataKey="Previa" fill="#94a3b8" />
+                <Bar dataKey="Posteriori" fill="#1d4ed8" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      ),
+    },
+
+    // BLOQUE 5 (Slides 13–15): Daniel Andrés Mera (Poisson y Ecuaciones)
+    {
+      tag: 'Poisson · Ecuaciones',
+      title: 'Modelo de Poisson (Grupo 2): Ecuaciones y Sobredispersión',
+      render: () => (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center my-auto">
+          <div className="lg:col-span-5 space-y-3 text-xs">
+            <div className="p-4 rounded-xl bg-[#0f294a] text-white space-y-1.5">
+              <p className="text-[10px] uppercase tracking-wider text-sky-300 font-bold">
+                Ecuación PMF y Propiedad de Equidispersión
+              </p>
+              <div className="text-sm font-mono flex items-center flex-wrap">
+                <span>P(X = k) =</span>
+                <span className="math-frac">
+                  <span>e⁻λ · λᵏ</span>
+                  <span>k!</span>
+                </span>
+                <span className="ml-2 text-sky-300">| E[X] = Var(X) = λ</span>
+              </div>
+            </div>
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+              <p className="font-bold text-[#0b1f3b]">Popayán 2025 · Agregado (52 semanas)</p>
+              <p>
+                1,896 hechos · <strong>λ = {formatDec(popPoissonAll.lambda)}</strong> · s² ={' '}
+                {formatDec(popPoissonAll.varianza)} · Razón{' '}
+                <strong className="text-orange-700">
+                  s²/λ = {formatDec(popPoissonAll.dispersionRatio)}
+                </strong>{' '}
+                (sobredispersión).
+              </p>
+            </div>
+            <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 space-y-1">
+              <p className="font-bold text-emerald-900">Popayán 2025 · Hurto Automotores</p>
+              <p className="text-emerald-950">
+                204 hechos · <strong>λ = {formatDec(popPoissonAuto.lambda)}</strong> · s² ={' '}
+                {formatDec(popPoissonAuto.varianza)} ·{' '}
+                <strong>s²/λ = {formatDec(popPoissonAuto.dispersionRatio)}</strong> (equidispersión
+                casi ideal).
+              </p>
+            </div>
+          </div>
+          <div className="lg:col-span-7 h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={popPoissonAuto.pmfComparativa}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="k" tick={{ fontSize: 10 }} />
+                <YAxis tick={{ fontSize: 10 }} />
+                <Tooltip formatter={(v: number) => v.toFixed(4)} />
+                <Legend wrapperStyle={{ fontSize: 11 }} />
+                <Bar dataKey="observado" name="Observado (Automotores)" fill="#93c5fd" />
+                <Line
+                  type="monotone"
+                  dataKey="poisson"
+                  name={`Poisson(λ=${popPoissonAuto.lambda.toFixed(2)})`}
+                  stroke="#0f294a"
+                  strokeWidth={2.5}
+                />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      ),
+    },
+    {
+      tag: 'TLC y Bondad χ²',
+      title: 'Ecuaciones Avanzadas: Suma S₇ (TLC) y Bondad de Ajuste χ²',
+      render: () => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 my-auto text-xs sm:text-sm">
+          <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+            <span className="text-[11px] font-bold uppercase text-blue-700">
+              Propiedad Reproductiva y Teorema del Límite Central
+            </span>
+            <div className="p-3 rounded-xl bg-[#0f294a] text-white font-mono text-xs space-y-1">
+              <p>S₇ = ∑ᵢ₌₁⁷ Xᵢ ~ Poisson(λ₇ = 7λ = {formatDec(popClt.lamM)})</p>
+              <div className="flex items-center">
+                <span>Z =</span>
+                <span className="math-frac">
+                  <span>c + 0.5 − 7λ</span>
+                  <span>√(7λ)</span>
+                </span>
+                <span className="ml-2">= {formatDec(popClt.z)}</span>
+              </div>
+            </div>
+            <p className="text-slate-700">
+              Para c = {popClt.c}: Probabilidad exacta P(S₇ &gt; {popClt.c}) ={' '}
+              <strong className="font-mono text-blue-700">{formatProb(popClt.exacta)}</strong> vs
+              aproximación Normal ={' '}
+              <strong className="font-mono text-sky-700">{formatProb(popClt.normalAprox)}</strong>{' '}
+              (|Δ| = {formatProb(popClt.diferencia)}).
+            </p>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-emerald-50/70 border border-emerald-200 space-y-3">
+            <span className="text-[11px] font-bold uppercase text-emerald-800">
+              Prueba Chi-Cuadrado (χ²) de Bondad de Ajuste
+            </span>
+            <div className="p-3 rounded-xl bg-white border border-emerald-200 font-mono text-xs text-[#0b1f3b]">
+              <div className="flex items-center">
+                <span>χ² = ∑</span>
+                <span className="math-frac">
+                  <span>(Oᵢ − Eᵢ)²</span>
+                  <span>Eᵢ</span>
+                </span>
+                <span className="ml-2">
+                  (gl = k − 1 − 1 = {popPoissonAuto.chi2Test.df})
+                </span>
+              </div>
+            </div>
+            <p className="text-emerald-950">
+              En <strong>Popayán Automotores 2025</strong> (λ = {formatDec(popPoissonAuto.lambda)}):
+              χ² = <strong className="font-mono">{formatDec(popPoissonAuto.chi2Test.chi2)}</strong>,
+              valor-p ={' '}
+              <strong className="font-mono">{formatProb(popPoissonAuto.chi2Test.pValor)}</strong> ≥
+              0.05 → <strong>El ajuste Poisson es estadísticamente válido.</strong>
+            </p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      tag: 'IC y Prueba z',
+      title: 'Estimación por Intervalo de Confianza y Contraste z (Opcional)',
+      render: () => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 my-auto text-xs sm:text-sm">
+          <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+            <span className="text-[11px] font-bold uppercase text-blue-700">
+              Unidad 3 · Intervalo de Confianza 95% y Tamaño de Muestra
+            </span>
+            <div className="p-3 rounded-xl bg-white border border-slate-200 font-mono text-xs text-[#0b1f3b]">
+              IC₉₅% = x̄ ± 1.96 · √(x̄ / n) &nbsp;|&nbsp; n* = ⌈(1.96·s / E)²⌉
+            </div>
+            <p>
+              Para Popayán 2025 (n = 52 semanas, x̄ = <strong>{formatDec(popHyp.xBar)}</strong>):
+            </p>
+            <p className="font-mono font-bold text-blue-700 text-base">
+              IC 95% = [{formatDec(popHyp.icPoisson[0])} ; {formatDec(popHyp.icPoisson[1])}]
+              hurtos/sem
+            </p>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-orange-50/70 border border-orange-200 space-y-3">
+            <span className="text-[11px] font-bold uppercase text-orange-800">
+              Unidad 4 · Contraste Bilateral z (2024 vs 2025 en Popayán)
+            </span>
+            <div className="p-3 rounded-xl bg-white border border-orange-200 font-mono text-xs text-[#0b1f3b] space-y-1">
+              <p>
+                H₀: λ₂₀₂₅ = λ₀ ({formatDec(popHyp.lam0)}) vs H₁: λ₂₀₂₅ ≠ λ₀
+              </p>
+              <div className="flex items-center">
+                <span>z =</span>
+                <span className="math-frac">
+                  <span>x̄ − λ₀</span>
+                  <span>√(λ₀ / n)</span>
+                </span>
+                <span className="ml-2">
+                  = <strong>{formatDec(popHyp.zStat)}</strong> (valor-p &lt; 0.0001)
+                </span>
+              </div>
+            </div>
+            <p className="font-semibold text-orange-950">
+              Decisión (α = 0.05): |z| &gt; 1.96 → Se rechaza H₀. Hubo reducción estadísticamente
+              significativa frente a 2024.
+            </p>
+          </div>
+        </div>
+      ),
+    },
+
+    // BLOQUE 6 (Slides 16–18): Santiago Alexis Ordoñez Segura
     {
       tag: 'Hallazgos',
       title: 'Principales Hallazgos Respaldados por Datos',
@@ -832,15 +924,18 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
             ],
             [
               '3. Impacto Crítico de Calidad de Datos',
-              'Un parseo erróneo de fecha (MM/DD) ocultaba el 60.20% de los hechos; la auditoría ETL recuperó el 100% y explicó los nulos estructurales en género.',
+              'El parseo erróneo MM/DD ocultaba el 60.20% de los hechos; la auditoría ETL recuperó el 100% y explicó los nulos estructurales en género.',
             ],
             [
-              '4. Validez Diferenciada de Poisson',
-              'En series agregadas existe sobredispersión (s²/λ = 1.78 en Popayán 2025 total), pero en subgrupos homogéneos como Automotores el ajuste Poisson es excelente (s²/λ = 0.96).',
+              '4. Validez Diferenciada de Poisson y Bayes',
+              'En series agregadas existe sobredispersión (s²/λ = 1.78), pero en Automotores Popayán el ajuste Poisson es excelente (s²/λ = 0.96); Bayes demuestra alta dependencia arma-modalidad.',
             ],
           ].map(([t, d]) => (
-            <div key={t} className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
-              <p className="font-bold text-[#0f294a]">{t}</p>
+            <div
+              key={t}
+              className="p-5 rounded-2xl bg-gradient-to-br from-slate-50 to-white border border-slate-200 space-y-1.5 shadow-2xs"
+            >
+              <p className="font-bold text-[#0b1f3b]">{t}</p>
               <p className="text-slate-600 leading-relaxed">{d}</p>
             </div>
           ))}
@@ -852,20 +947,20 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
       title: 'Conclusiones e Impacto del Proyecto',
       render: () => (
         <div className="space-y-4 my-auto text-sm">
-          <div className="p-5 rounded-2xl bg-blue-50/60 border border-blue-100">
-            <strong className="text-[#0f294a] block mb-1">Aporte Metodológico</strong>
+          <div className="p-5 rounded-2xl bg-blue-50/70 border border-blue-200">
+            <strong className="text-[#0b1f3b] block mb-1">Aporte Metodológico</strong>
             <p className="text-slate-700 text-xs sm:text-sm">
               La integración entre Ciencia de Datos e Inferencia Estadística demuestra que la
               calidad del preprocesamiento determina directamente la validez de cualquier parámetro
-              estimado (λ, varianza o pruebas de hipótesis).
+              estimado (λ, varianza, probabilidades posteriores o pruebas de hipótesis).
             </p>
           </div>
-          <div className="p-5 rounded-2xl bg-emerald-50/60 border border-emerald-100">
+          <div className="p-5 rounded-2xl bg-emerald-50/70 border border-emerald-200">
             <strong className="text-emerald-900 block mb-1">Utilidad Práctica</strong>
             <p className="text-emerald-950 text-xs sm:text-sm">
               La plataforma web convierte bases gubernamentales de más de 1.35 millones de filas en
-              una herramienta de consulta territorial, detección de umbrales semanales de alerta (5%)
-              y soporte académico para Ingeniería Informática.
+              una herramienta interactiva de consulta territorial, detección de alertas semanales al
+              5% y soporte académico de nivel universitario.
             </p>
           </div>
         </div>
@@ -875,10 +970,10 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
       tag: 'Cierre',
       title: 'Agradecimientos y Espacio de Preguntas',
       render: () => (
-        <div className="h-full flex flex-col items-center justify-center text-center bg-gradient-to-br from-[#0f294a] to-[#1d4ed8] text-white rounded-2xl p-8 space-y-5">
+        <div className="h-full flex flex-col items-center justify-center text-center bg-gradient-to-br from-[#081529] via-[#0f294a] to-[#1d4ed8] text-white rounded-2xl p-8 space-y-5">
           <PresentationIcon className="w-12 h-12 text-sky-300" />
           <h3 className="text-3xl sm:text-4xl font-extrabold">¡Muchas Gracias!</h3>
-          <p className="text-sm sm:text-base text-slate-200 max-w-2xl">
+          <p className="text-xs sm:text-sm text-slate-200 max-w-2xl font-medium">
             {PROJECT_META.title}
           </p>
           <p className="text-xs text-sky-200">
@@ -899,13 +994,16 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
   return (
     <div className="space-y-4">
       {/* Barra superior de control */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
+      <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-bold text-[#0f294a]">
+          <h2 className="text-lg font-extrabold text-[#0b1f3b]">
             Presentación Académica Integrada
           </h2>
           <p className="text-xs text-slate-500">
-            Usa flechas del teclado (← / →) o tecla <kbd className="px-1.5 py-0.5 bg-slate-100 rounded border">F</kbd> para pantalla completa
+            6 bloques consecutivos sin saltos · Teclas{' '}
+            <kbd className="px-1.5 py-0.5 bg-slate-100 rounded border">←</kbd>{' '}
+            <kbd className="px-1.5 py-0.5 bg-slate-100 rounded border">→</kbd> o{' '}
+            <kbd className="px-1.5 py-0.5 bg-slate-100 rounded border">F</kbd> (pantalla completa)
           </p>
         </div>
 
@@ -913,17 +1011,17 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
           <button
             type="button"
             onClick={() => setShowSchedule((s) => !s)}
-            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-semibold cursor-pointer ${
+            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-bold cursor-pointer ${
               showSchedule
                 ? 'bg-blue-50 border-blue-300 text-blue-800'
                 : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
             }`}
           >
             <Users className="w-3.5 h-3.5" />
-            Repartición (15 min)
+            Orden de Expositores (15 min)
           </button>
-          <span className="text-xs font-mono font-semibold text-slate-600 px-3 py-1.5 rounded-xl bg-slate-100">
-            Diapositiva {slideIdx + 1} de {totalSlides}
+          <span className="text-xs font-mono font-bold text-slate-700 px-3 py-1.5 rounded-xl bg-slate-100">
+            Diapositiva {slideIdx + 1} / {totalSlides}
           </span>
           <button
             type="button"
@@ -946,7 +1044,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
           <button
             type="button"
             onClick={toggleFullscreen}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#0f294a] text-white text-xs font-semibold hover:bg-blue-800 cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#0f294a] to-[#1d4ed8] text-white text-xs font-bold hover:opacity-95 cursor-pointer shadow-xs"
           >
             {isFullscreen ? (
               <>
@@ -961,60 +1059,39 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
         </div>
       </div>
 
-      {/* Panel desplegable de repartición por expositor */}
+      {/* Panel desplegable con los 6 bloques consecutivos */}
       {showSchedule && (
-        <div className="bg-white rounded-2xl border border-blue-200 p-5 shadow-xs space-y-3">
+        <div className="bg-white rounded-2xl border border-blue-200 p-5 shadow-xs space-y-4">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <h3 className="text-sm font-bold text-[#0f294a]">
-              Guía de Repartición de Exposición (Total: 15 min)
+            <h3 className="text-sm font-bold text-[#0b1f3b]">
+              Orden Secuencial de Sustentación (Diapositivas Seguidas por Expositor)
             </h3>
             <span className="text-xs text-slate-500">
-              Haz clic en cualquier fila para ir a esa diapositiva
+              Haz clic en un bloque para iniciar en su primera diapositiva
             </span>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="border-b border-slate-200 text-slate-500">
-                  <th className="py-2 pr-3 font-semibold">#</th>
-                  <th className="py-2 pr-3 font-semibold">Expositor</th>
-                  <th className="py-2 pr-3 font-semibold">Nivel / Enfoque</th>
-                  <th className="py-2 pr-3 font-semibold">Tiempo</th>
-                  <th className="py-2 font-semibold">Puntos clave a sustentar</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {SLIDE_ASSIGNMENTS.map((sa, idx) => (
-                  <tr
-                    key={sa.slideNumber}
-                    onClick={() => setSlideIdx(idx)}
-                    className={`cursor-pointer hover:bg-blue-50/60 ${
-                      idx === slideIdx ? 'bg-blue-50' : ''
-                    }`}
-                  >
-                    <td className="py-2 pr-3 font-mono font-bold text-[#0f294a]">
-                      {sa.slideNumber}
-                    </td>
-                    <td className="py-2 pr-3 font-semibold text-slate-800">{sa.presenter}</td>
-                    <td className="py-2 pr-3">
-                      <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                          sa.level.includes('Máxima')
-                            ? 'bg-orange-100 text-orange-800'
-                            : sa.level === 'Alta Dificultad'
-                              ? 'bg-blue-100 text-blue-800'
-                              : 'bg-slate-100 text-slate-700'
-                        }`}
-                      >
-                        {sa.level}
-                      </span>
-                    </td>
-                    <td className="py-2 pr-3 font-mono text-slate-600">{sa.duration}</td>
-                    <td className="py-2 text-slate-600">{sa.notes}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+            {PROJECT_META.teamMembers.map((m) => (
+              <button
+                key={m.name}
+                type="button"
+                onClick={() => setSlideIdx(m.slideRange[0] - 1)}
+                className="p-3.5 rounded-xl border border-slate-200 hover:border-blue-400 hover:bg-blue-50/40 text-left transition-all cursor-pointer space-y-1"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs font-bold text-[#0b1f3b]">
+                    Turno {m.order} · {m.name}
+                  </span>
+                  <span className="text-[11px] font-mono text-blue-700 font-bold">
+                    {m.duration}
+                  </span>
+                </div>
+                <p className="text-[11px] font-semibold text-blue-700">
+                  {m.slides} · {m.difficulty}
+                </p>
+                <p className="text-[11px] text-slate-600">{m.scope}</p>
+              </button>
+            ))}
           </div>
         </div>
       )}
@@ -1022,15 +1099,14 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
       {/* Escenario de diapositiva */}
       <div
         ref={stageRef}
-        className={`bg-white rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-between overflow-hidden ${
+        className={`bg-white rounded-3xl border border-slate-200/90 shadow-md flex flex-col justify-between overflow-hidden ${
           isFullscreen ? 'p-8 sm:p-12 h-screen' : 'p-6 sm:p-10 min-h-[560px]'
         }`}
       >
-        {/* Barra de progreso superior y expositor asignado */}
         <div className="space-y-3">
           <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
             <div
-              className="h-full bg-blue-600 transition-all duration-300"
+              className="h-full bg-gradient-to-r from-[#0f294a] via-blue-600 to-sky-400 transition-all duration-300"
               style={{ width: `${progressPct}%` }}
             />
           </div>
@@ -1040,14 +1116,14 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
                 <span className="text-[11px] font-bold uppercase tracking-wider text-blue-700">
                   {current.tag}
                 </span>
-                <h3 className="text-xl font-bold text-[#0f294a]">{current.title}</h3>
+                <h3 className="text-xl font-extrabold text-[#0b1f3b]">{current.title}</h3>
               </div>
               <div className="flex items-center gap-2 text-xs">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#0f294a] font-semibold">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#0b1f3b] font-bold">
                   <UserCheck className="w-3.5 h-3.5 text-blue-700" />
-                  {assignment.presenter}
+                  Turno {assignment.blockOrder}/6 · {assignment.presenter}
                 </span>
-                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-slate-100 text-slate-600 font-mono">
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 font-mono font-semibold">
                   <Clock className="w-3 h-3" />
                   {assignment.duration}
                 </span>
@@ -1056,13 +1132,17 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
           )}
         </div>
 
-        {/* Contenido */}
-        <div className="flex-1 py-4 flex flex-col">{current.render()}</div>
+        {/* Contenido animado al cambiar de diapositiva */}
+        <div key={slideIdx} className="flex-1 py-4 flex flex-col animate-slide-in">
+          {current.render()}
+        </div>
 
-        {/* Pie discreto con expositor también en portada/cierre */}
+        {/* Pie con expositor y bloque */}
         <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-[11px] text-slate-500">
           <span>
-            Expositor: <strong className="text-[#0f294a]">{assignment.presenter}</strong> ({assignment.level})
+            Turno {assignment.blockOrder}/6:{' '}
+            <strong className="text-[#0b1f3b]">{assignment.presenter}</strong> ·{' '}
+            <span className="text-blue-700 font-semibold">{assignment.level}</span>
           </span>
           {isFullscreen ? (
             <div className="flex items-center gap-2">
@@ -1092,16 +1172,16 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
       </div>
 
       {/* Índice rápido de diapositivas */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 p-3 shadow-xs">
+      <div className="bg-white rounded-2xl border border-slate-200/90 p-3 shadow-xs">
         <div className="flex gap-1.5 overflow-x-auto pb-1">
           {slides.map((s, idx) => (
             <button
               key={s.tag}
               type="button"
               onClick={() => setSlideIdx(idx)}
-              className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+              className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                 idx === slideIdx
-                  ? 'bg-[#0f294a] text-white'
+                  ? 'bg-[#0f294a] text-white shadow-xs'
                   : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
               }`}
             >

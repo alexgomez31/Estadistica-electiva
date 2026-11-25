@@ -1,11 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import {
   AlertCircle,
+  BarChart3,
   CalendarRange,
   Filter,
   Info,
   Layers,
   MapPin,
+  PieChart as PieChartIcon,
   RotateCcw,
   ShieldAlert,
   TrendingDown,
@@ -48,6 +50,15 @@ const INITIAL_FILTERS: DashboardFilters = {
   genero: 'TODOS',
 };
 
+const TOOLTIP_STYLE = {
+  backgroundColor: '#0b1f3b',
+  border: '1px solid #1e3a8a',
+  borderRadius: '12px',
+  color: '#f8fafc',
+  fontSize: '12px',
+  boxShadow: '0 10px 25px -5px rgba(15, 41, 74, 0.35)',
+};
+
 interface InterpretationBoxProps {
   represents: string;
   behavior: string;
@@ -61,21 +72,21 @@ const InterpretationBox: React.FC<InterpretationBoxProps> = ({
   finding,
   limitation,
 }) => (
-  <div className="mt-4 pt-3.5 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs text-slate-600 bg-slate-50/70 p-3.5 rounded-xl">
+  <div className="mt-4 pt-3.5 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs text-slate-600 bg-gradient-to-br from-slate-50 to-blue-50/30 p-4 rounded-xl border border-slate-200/60">
     <div>
-      <span className="font-semibold text-[#0f294a]">Qué representa: </span>
+      <span className="font-bold text-[#0b1f3b]">Qué representa: </span>
       {represents}
     </div>
     <div>
-      <span className="font-semibold text-[#0f294a]">Comportamiento observado: </span>
+      <span className="font-bold text-[#0b1f3b]">Comportamiento observado: </span>
       {behavior}
     </div>
     <div>
-      <span className="font-semibold text-blue-700">Hallazgo relevante: </span>
+      <span className="font-bold text-blue-700">Hallazgo relevante: </span>
       {finding}
     </div>
     <div>
-      <span className="font-semibold text-orange-700">Limitación: </span>
+      <span className="font-bold text-orange-700">Limitación: </span>
       {limitation}
     </div>
   </div>
@@ -87,10 +98,8 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
 
   const { cubeCore, cubeMun, colombiaMap } = data;
 
-  // Lista dinámica de municipios filtrada por departamento seleccionado
   const availableMunicipios = useMemo(() => {
     if (filters.departamento === 'TODOS') {
-      // Top 150 municipios por volumen para mantener ágil el selector
       const tot = new Map<number, number>();
       for (const r of cubeMun.rows) {
         tot.set(r[3], (tot.get(r[3]) ?? 0) + r[5]);
@@ -114,7 +123,7 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
     [cubeCore, cubeMun, filters]
   );
 
-  const hasActiveFilters = Object.values(filters).some((v) => v !== 'TODOS');
+  const activeCount = Object.values(filters).filter((v) => v !== 'TODOS').length;
 
   const updateFilter = <K extends keyof DashboardFilters>(
     key: K,
@@ -126,7 +135,6 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
         next.municipio = 'TODOS';
       }
       if (key === 'municipio' && value !== 'TODOS') {
-        // Arma y género no están desagregados en cubeMun, se restablecen para mantener coherencia exacta
         next.arma = 'TODOS';
         next.genero = 'TODOS';
       }
@@ -139,54 +147,112 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
 
   return (
     <div className="space-y-6">
-      {/* Encabezado */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      {/* Encabezado Ejecutivo */}
+      <div className="rounded-2xl bg-gradient-to-r from-[#0b1f3b] via-[#12335e] to-[#1d4ed8] text-white p-6 shadow-md flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-[#0f294a]">
-            Dashboard Analítico de Hurtos en Colombia
+          <span className="text-[11px] font-bold uppercase tracking-widest text-sky-300">
+            Tablero Interactivo de Analítica Territorial y Modalidades
+          </span>
+          <h2 className="text-2xl font-extrabold mt-0.5 tracking-tight">
+            Dashboard General de Hurtos en Colombia
           </h2>
-          <p className="text-sm text-slate-500 mt-0.5">
-            Fuente: Policía Nacional (DIJIN) · Datos Abiertos Colombia (2010 – julio de 2026)
+          <p className="text-xs sm:text-sm text-slate-200 mt-1">
+            Policía Nacional (DIJIN) · Datos Abiertos Colombia · Enero 2010 a Julio 2026
           </p>
         </div>
-        {hasActiveFilters && (
+
+        {/* Atajos rápidos */}
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={() => setFilters(INITIAL_FILTERS)}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-200 text-sm font-semibold text-[#0f294a] hover:bg-slate-100 transition-colors cursor-pointer self-start sm:self-auto shadow-xs"
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+              activeCount === 0
+                ? 'bg-white text-[#0b1f3b] border-white'
+                : 'bg-white/10 text-white border-white/25 hover:bg-white/20'
+            }`}
           >
-            <RotateCcw className="w-4 h-4 text-blue-600" />
-            Restablecer filtros
+            Todo Colombia
           </button>
-        )}
+          <button
+            type="button"
+            onClick={() => setFilters({ ...INITIAL_FILTERS, departamento: 'CAUCA' })}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+              filters.departamento === 'CAUCA' && filters.municipio === 'TODOS'
+                ? 'bg-sky-400 text-[#0b1f3b] border-sky-300'
+                : 'bg-white/10 text-white border-white/25 hover:bg-white/20'
+            }`}
+          >
+            Cauca
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              setFilters({
+                ...INITIAL_FILTERS,
+                departamento: 'CAUCA',
+                municipio: 'POPAYÁN (CT)',
+              })
+            }
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+              filters.municipio === 'POPAYÁN (CT)'
+                ? 'bg-sky-400 text-[#0b1f3b] border-sky-300'
+                : 'bg-white/10 text-white border-white/25 hover:bg-white/20'
+            }`}
+          >
+            Popayán (CT)
+          </button>
+          <button
+            type="button"
+            onClick={() => setFilters({ ...INITIAL_FILTERS, anio: 2024 })}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+              filters.anio === 2024 && activeCount === 1
+                ? 'bg-amber-400 text-[#0b1f3b] border-amber-300'
+                : 'bg-white/10 text-white border-white/25 hover:bg-white/20'
+            }`}
+          >
+            Año Pico (2024)
+          </button>
+          {activeCount > 0 && (
+            <button
+              type="button"
+              onClick={() => setFilters(INITIAL_FILTERS)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-orange-500 text-white text-xs font-bold hover:bg-orange-600 cursor-pointer"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              Limpiar ({activeCount})
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Panel de Filtros Interactivos */}
-      <section className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs space-y-4">
+      <section className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs space-y-4">
         <div className="flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-blue-700" />
-            <h3 className="text-sm font-bold text-[#0f294a]">Segmentadores Dinámicos</h3>
+            <div className="p-1.5 rounded-lg bg-blue-50 text-blue-700">
+              <Filter className="w-4 h-4" />
+            </div>
+            <h3 className="text-sm font-bold text-[#0b1f3b]">Segmentadores Multidimensionales</h3>
           </div>
-          <span className="text-xs text-slate-500">
-            Mostrando{' '}
-            <strong className="text-[#0f294a] tabular-nums">
+          <span className="text-xs text-slate-600 bg-slate-100 px-3 py-1 rounded-full">
+            Universo activo:{' '}
+            <strong className="text-[#0b1f3b] font-mono tabular-nums">
               {formatInt(agg.totalHechos)}
             </strong>{' '}
-            hechos registrados
+            hechos
           </span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-3">
-          {/* Año */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 mb-1">Año</label>
+            <label className="block text-[11px] font-bold text-slate-500 mb-1">Año</label>
             <select
               value={filters.anio}
               onChange={(e) =>
                 updateFilter('anio', e.target.value === 'TODOS' ? 'TODOS' : Number(e.target.value))
               }
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="TODOS">Todos (2010–2026)</option>
               {cubeCore.anios.map((a) => (
@@ -197,15 +263,14 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
             </select>
           </div>
 
-          {/* Mes */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 mb-1">Mes</label>
+            <label className="block text-[11px] font-bold text-slate-500 mb-1">Mes</label>
             <select
               value={filters.mes}
               onChange={(e) =>
                 updateFilter('mes', e.target.value === 'TODOS' ? 'TODOS' : Number(e.target.value))
               }
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="TODOS">Todos los meses</option>
               {MONTH_NAMES_FULL.map((mName, idx) => (
@@ -216,15 +281,14 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
             </select>
           </div>
 
-          {/* Departamento */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 mb-1">
+            <label className="block text-[11px] font-bold text-slate-500 mb-1">
               Departamento
             </label>
             <select
               value={filters.departamento}
               onChange={(e) => updateFilter('departamento', e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="TODOS">Todos (33 territorios)</option>
               {cubeCore.departamentos.map((d, idx) => (
@@ -235,15 +299,12 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
             </select>
           </div>
 
-          {/* Municipio */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 mb-1">
-              Municipio
-            </label>
+            <label className="block text-[11px] font-bold text-slate-500 mb-1">Municipio</label>
             <select
               value={filters.municipio}
               onChange={(e) => updateFilter('municipio', e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="TODOS">
                 {filters.departamento === 'TODOS' ? 'Todos (Top 150)' : 'Todos del depto.'}
@@ -256,15 +317,12 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
             </select>
           </div>
 
-          {/* Modalidad */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 mb-1">
-              Modalidad
-            </label>
+            <label className="block text-[11px] font-bold text-slate-500 mb-1">Modalidad</label>
             <select
               value={filters.modalidad}
               onChange={(e) => updateFilter('modalidad', e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="TODOS">Todas (7 modalidades)</option>
               {cubeCore.modalidades.map((m, idx) => (
@@ -275,16 +333,13 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
             </select>
           </div>
 
-          {/* Arma / Medio */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 mb-1">
-              Arma / Medio
-            </label>
+            <label className="block text-[11px] font-bold text-slate-500 mb-1">Arma / Medio</label>
             <select
               value={filters.arma}
               disabled={agg.usaSoloMunicipio}
               onChange={(e) => updateFilter('arma', e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-800 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-800 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="TODOS">Todos los medios</option>
               {cubeCore.armas.map((a) => (
@@ -295,14 +350,13 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
             </select>
           </div>
 
-          {/* Género */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 mb-1">Género</label>
+            <label className="block text-[11px] font-bold text-slate-500 mb-1">Género</label>
             <select
               value={filters.genero}
               disabled={agg.usaSoloMunicipio}
               onChange={(e) => updateFilter('genero', e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-800 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-800 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="TODOS">Todos</option>
               {cubeCore.generos.map((g) => (
@@ -315,7 +369,7 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
         </div>
 
         {agg.usaSoloMunicipio && (
-          <div className="flex items-center gap-2 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-xl px-3.5 py-2">
+          <div className="flex items-center gap-2 text-xs text-amber-900 bg-amber-50 border border-amber-200 rounded-xl px-3.5 py-2">
             <Info className="w-4 h-4 shrink-0 text-amber-600" />
             <span>
               Al filtrar por un municipio específico ({filters.municipio}), los paneles de Arma/Medio
@@ -330,16 +384,14 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
         <KpiCard
           title="Total Hurtos"
           value={formatInt(agg.totalHechos)}
-          subtitle={hasActiveFilters ? 'Bajo filtros aplicados' : 'Histórico nacional 2010–2026'}
+          subtitle={activeCount > 0 ? 'Bajo filtros aplicados' : 'Histórico nacional 2010–2026'}
           icon={ShieldAlert}
           accent="navy"
         />
         <KpiCard
           title="Modalidad Principal"
           value={agg.topModalidad ? agg.topModalidad.corta : 'Sin datos'}
-          subtitle={
-            agg.topModalidad ? `${formatInt(agg.topModalidad.hechos)} hechos` : undefined
-          }
+          subtitle={agg.topModalidad ? `${formatInt(agg.topModalidad.hechos)} hechos` : undefined}
           badge={agg.topModalidad ? formatPct(agg.topModalidad.pct) : undefined}
           badgeTone="neutral"
           icon={Layers}
@@ -348,11 +400,7 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
         <KpiCard
           title="Mayor Concentración"
           value={agg.topDepto ? agg.topDepto.nombre : 'Sin datos'}
-          subtitle={
-            agg.topMunicipio
-              ? `Mun. líder: ${agg.topMunicipio.nombre}`
-              : undefined
-          }
+          subtitle={agg.topMunicipio ? `Mun. líder: ${agg.topMunicipio.nombre}` : undefined}
           badge={agg.topDepto ? formatPct(agg.topDepto.pct) : undefined}
           icon={MapPin}
           accent="sky"
@@ -398,7 +446,7 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
       {agg.totalHechos === 0 ? (
         <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center space-y-2">
           <AlertCircle className="w-8 h-8 text-orange-500 mx-auto" />
-          <p className="text-base font-bold text-[#0f294a]">
+          <p className="text-base font-bold text-[#0b1f3b]">
             No hay hechos registrados para esta combinación de filtros
           </p>
           <p className="text-sm text-slate-500">
@@ -409,11 +457,16 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
         <>
           {/* Fila 1: Modalidades (Barras + Dona) */}
           <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-            <div className="xl:col-span-7 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs flex flex-col justify-between">
+            <div className="xl:col-span-7 bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between">
               <div>
-                <h3 className="text-base font-bold text-[#0f294a]">
-                  Comparación de Modalidades de Hurto
-                </h3>
+                <div className="flex items-center gap-2.5 mb-1">
+                  <div className="p-2 rounded-lg bg-blue-50 text-blue-700">
+                    <BarChart3 className="w-4 h-4" />
+                  </div>
+                  <h3 className="text-base font-bold text-[#0b1f3b]">
+                    Comparación de Modalidades de Hurto
+                  </h3>
+                </div>
                 <p className="text-xs text-slate-500 mb-4">
                   Volumen total de hechos reportados por tipo de hurto (Art. 239 CP)
                 </p>
@@ -434,13 +487,14 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
                         type="category"
                         dataKey="nombre"
                         width={140}
-                        tick={{ fontSize: 11, fill: '#0f172a' }}
+                        tick={{ fontSize: 11, fill: '#0f172a', fontWeight: 500 }}
                       />
                       <Tooltip
                         formatter={(val: number) => [formatInt(val), 'Hechos']}
-                        contentStyle={{ borderRadius: 12, borderColor: '#cbd5e1', fontSize: 12 }}
+                        contentStyle={TOOLTIP_STYLE}
+                        itemStyle={{ color: '#e2e8f0' }}
                       />
-                      <Bar dataKey="hechos" radius={[0, 6, 6, 0]}>
+                      <Bar dataKey="hechos" radius={[0, 8, 8, 0]}>
                         {agg.porModalidad.map((_, i) => (
                           <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
                         ))}
@@ -451,19 +505,24 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
               </div>
               <InterpretationBox
                 represents="Distribución absoluta de hechos por cada una de las 7 modalidades registradas."
-                behavior="Se evidencia una alta asimetría: dos modalidades dominan el volumen total mientras piratería y entidades financieras representan una fracción menor."
+                behavior="Alta asimetría: dos modalidades dominan el volumen total mientras piratería y bancos representan una fracción menor."
                 finding="Entidades Comerciales (583,312) y Motocicletas (497,736) explican cerca del 80% del total nacional."
                 limitation="Agrupa denuncias ante la Policía Nacional; modalidades con menor tasa de denuncia pueden estar subrepresentadas."
               />
             </div>
 
-            <div className="xl:col-span-5 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs flex flex-col justify-between">
+            <div className="xl:col-span-5 bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between">
               <div>
-                <h3 className="text-base font-bold text-[#0f294a]">
-                  Participación Porcentual por Modalidad
-                </h3>
+                <div className="flex items-center gap-2.5 mb-1">
+                  <div className="p-2 rounded-lg bg-sky-50 text-sky-700">
+                    <PieChartIcon className="w-4 h-4" />
+                  </div>
+                  <h3 className="text-base font-bold text-[#0b1f3b]">
+                    Participación Porcentual por Modalidad
+                  </h3>
+                </div>
                 <p className="text-xs text-slate-500 mb-2">
-                  Peso relativo sobre el total filtrado ({formatInt(agg.totalHechos)} hechos)
+                  Peso relativo sobre el universo activo ({formatInt(agg.totalHechos)} hechos)
                 </p>
                 <div className="h-72 w-full">
                   <ResponsiveContainer width="100%" height="100%">
@@ -476,7 +535,7 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
                         cy="50%"
                         innerRadius={58}
                         outerRadius={95}
-                        paddingAngle={2}
+                        paddingAngle={2.5}
                       >
                         {agg.porModalidad.map((_, i) => (
                           <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
@@ -487,7 +546,8 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
                           `${formatInt(val)} (${formatPct(item.payload.pct)})`,
                           item.payload.nombre,
                         ]}
-                        contentStyle={{ borderRadius: 12, borderColor: '#cbd5e1', fontSize: 12 }}
+                        contentStyle={TOOLTIP_STYLE}
+                        itemStyle={{ color: '#e2e8f0' }}
                       />
                       <Legend wrapperStyle={{ fontSize: 11 }} />
                     </PieChart>
@@ -496,7 +556,7 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
               </div>
               <InterpretationBox
                 represents="Proporción porcentual de cada modalidad frente al total del subconjunto consultado."
-                behavior="La estructura porcentual cambia drásticamente al filtrar por departamento rural frente a centros urbanos."
+                behavior="La estructura porcentual cambia drásticamente al filtrar departamentos rurales frente a grandes urbes."
                 finding="Automotores y Motocicletas superan conjuntamente el 48% de todos los hurtos registrados en la serie."
                 limitation="No incluye hurto a personas ni hurto de celulares por no estar publicados en estos 3 recursos."
               />
@@ -504,10 +564,10 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
           </div>
 
           {/* Fila 2: Comportamiento Temporal */}
-          <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs hover:shadow-md transition-shadow">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
               <div>
-                <h3 className="text-base font-bold text-[#0f294a]">
+                <h3 className="text-base font-bold text-[#0b1f3b]">
                   Comportamiento Temporal de los Registros (2010 – julio 2026)
                 </h3>
                 <p className="text-xs text-slate-500">
@@ -519,9 +579,9 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
                 <button
                   type="button"
                   onClick={() => setTimeView('anual')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     timeView === 'anual'
-                      ? 'bg-white text-[#0f294a] shadow-xs'
+                      ? 'bg-white text-[#0b1f3b] shadow-xs'
                       : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
@@ -530,9 +590,9 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
                 <button
                   type="button"
                   onClick={() => setTimeView('mensual')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     timeView === 'mensual'
-                      ? 'bg-white text-[#0f294a] shadow-xs'
+                      ? 'bg-white text-[#0b1f3b] shadow-xs'
                       : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
@@ -550,8 +610,8 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
                   >
                     <defs>
                       <linearGradient id="colorHechos" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#1d4ed8" stopOpacity={0.28} />
-                        <stop offset="95%" stopColor="#1d4ed8" stopOpacity={0.02} />
+                        <stop offset="5%" stopColor="#1d4ed8" stopOpacity={0.35} />
+                        <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0.03} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
@@ -565,7 +625,8 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
                         `${formatInt(val)}${item.payload.parcial ? ' (ene–jul)' : ''}`,
                         'Hurtos',
                       ]}
-                      contentStyle={{ borderRadius: 12, borderColor: '#cbd5e1', fontSize: 12 }}
+                      contentStyle={TOOLTIP_STYLE}
+                      itemStyle={{ color: '#e2e8f0' }}
                     />
                     <Area
                       type="monotone"
@@ -593,13 +654,14 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
                     />
                     <Tooltip
                       formatter={(val: number) => [formatInt(val), 'Hurtos']}
-                      contentStyle={{ borderRadius: 12, borderColor: '#cbd5e1', fontSize: 12 }}
+                      contentStyle={TOOLTIP_STYLE}
+                      itemStyle={{ color: '#e2e8f0' }}
                     />
                     <Line
                       type="monotone"
                       dataKey="hechos"
                       stroke="#0ea5e9"
-                      strokeWidth={2}
+                      strokeWidth={2.2}
                       dot={false}
                     />
                   </LineChart>
@@ -616,9 +678,9 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
 
           {/* Fila 3: Mapa Geográfico de Colombia + Top Departamentos */}
           <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-            <div className="xl:col-span-5 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs flex flex-col justify-between">
+            <div className="xl:col-span-5 bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between">
               <div>
-                <h3 className="text-base font-bold text-[#0f294a]">
+                <h3 className="text-base font-bold text-[#0b1f3b]">
                   Mapa Geográfico de Colombia
                 </h3>
                 <p className="text-xs text-slate-500 mb-3">
@@ -640,13 +702,13 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
               />
             </div>
 
-            <div className="xl:col-span-7 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs flex flex-col justify-between">
+            <div className="xl:col-span-7 bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between">
               <div>
-                <h3 className="text-base font-bold text-[#0f294a]">
+                <h3 className="text-base font-bold text-[#0b1f3b]">
                   Top 12 Departamentos con Mayor Cantidad de Registros
                 </h3>
                 <p className="text-xs text-slate-500 mb-4">
-                  Comparación directa entre entidades territoriales bajo el filtro activo
+                  Haz clic sobre una barra para filtrar el tablero por ese territorio
                 </p>
                 <div className="h-[420px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
@@ -665,19 +727,20 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
                         type="category"
                         dataKey="nombre"
                         width={130}
-                        tick={{ fontSize: 11, fill: '#0f172a' }}
+                        tick={{ fontSize: 11, fill: '#0f172a', fontWeight: 500 }}
                       />
                       <Tooltip
                         formatter={(val: number, _name, item) => [
                           `${formatInt(val)} (${formatPct(item.payload.pct)})`,
                           'Hechos',
                         ]}
-                        contentStyle={{ borderRadius: 12, borderColor: '#cbd5e1', fontSize: 12 }}
+                        contentStyle={TOOLTIP_STYLE}
+                        itemStyle={{ color: '#e2e8f0' }}
                       />
                       <Bar
                         dataKey="hechos"
                         fill="#1d4ed8"
-                        radius={[0, 6, 6, 0]}
+                        radius={[0, 8, 8, 0]}
                         className="cursor-pointer"
                         onClick={(entry) => {
                           if (entry?.key) updateFilter('departamento', entry.key);
@@ -698,9 +761,9 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
 
           {/* Fila 4: Municipios + Evolución comparativa de modalidades */}
           <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-            <div className="xl:col-span-5 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs flex flex-col justify-between">
+            <div className="xl:col-span-5 bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between">
               <div>
-                <h3 className="text-base font-bold text-[#0f294a]">
+                <h3 className="text-base font-bold text-[#0b1f3b]">
                   Top 12 Municipios con Mayor Incidencia
                 </h3>
                 <p className="text-xs text-slate-500 mb-4">
@@ -730,9 +793,10 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
                           `${formatInt(val)} (${formatPct(item.payload.pct)})`,
                           'Hechos',
                         ]}
-                        contentStyle={{ borderRadius: 12, borderColor: '#cbd5e1', fontSize: 12 }}
+                        contentStyle={TOOLTIP_STYLE}
+                        itemStyle={{ color: '#e2e8f0' }}
                       />
-                      <Bar dataKey="hechos" fill="#0ea5e9" radius={[0, 6, 6, 0]} />
+                      <Bar dataKey="hechos" fill="#0ea5e9" radius={[0, 8, 8, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -745,9 +809,9 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
               />
             </div>
 
-            <div className="xl:col-span-7 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs flex flex-col justify-between">
+            <div className="xl:col-span-7 bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between">
               <div>
-                <h3 className="text-base font-bold text-[#0f294a]">
+                <h3 className="text-base font-bold text-[#0b1f3b]">
                   Evolución Comparativa de las Modalidades en el Tiempo
                 </h3>
                 <p className="text-xs text-slate-500 mb-4">
@@ -767,7 +831,8 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
                       />
                       <Tooltip
                         formatter={(val: number) => formatInt(val)}
-                        contentStyle={{ borderRadius: 12, borderColor: '#cbd5e1', fontSize: 11 }}
+                        contentStyle={TOOLTIP_STYLE}
+                        itemStyle={{ color: '#e2e8f0' }}
                       />
                       <Legend wrapperStyle={{ fontSize: 11 }} />
                       {agg.modalidadKeysCortas.map((modName, i) => (
@@ -776,7 +841,7 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
                           type="monotone"
                           dataKey={modName}
                           stroke={CHART_COLORS[i % CHART_COLORS.length]}
-                          strokeWidth={2}
+                          strokeWidth={2.2}
                           dot={false}
                         />
                       ))}
@@ -793,11 +858,11 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
             </div>
           </div>
 
-          {/* Fila 5: Armas/Medios y Género (si no hay municipio único) */}
+          {/* Fila 5: Armas/Medios y Género */}
           {!agg.usaSoloMunicipio && (
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-              <div className="xl:col-span-7 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
-                <h3 className="text-base font-bold text-[#0f294a]">
+              <div className="xl:col-span-7 bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs">
+                <h3 className="text-base font-bold text-[#0b1f3b]">
                   Distribución por Arma o Medio Empleado
                 </h3>
                 <p className="text-xs text-slate-500 mb-4">
@@ -827,20 +892,21 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
                           `${formatInt(val)} (${formatPct(item.payload.pct)})`,
                           'Hechos',
                         ]}
-                        contentStyle={{ borderRadius: 12, borderColor: '#cbd5e1', fontSize: 12 }}
+                        contentStyle={TOOLTIP_STYLE}
+                        itemStyle={{ color: '#e2e8f0' }}
                       />
-                      <Bar dataKey="hechos" fill="#0f294a" radius={[0, 6, 6, 0]} />
+                      <Bar dataKey="hechos" fill="#0f294a" radius={[0, 8, 8, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
               </div>
 
-              <div className="xl:col-span-5 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
-                <h3 className="text-base font-bold text-[#0f294a]">
+              <div className="xl:col-span-5 bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs">
+                <h3 className="text-base font-bold text-[#0b1f3b]">
                   Distribución por Género Registrado
                 </h3>
                 <p className="text-xs text-slate-500 mb-4">
-                  Nota: «NO REPORTADO» corresponde principalmente a hurtos contra entidades comerciales o financieras
+                  «NO REPORTADO» corresponde principalmente a hurtos contra personas jurídicas
                 </p>
                 <div className="h-64 w-full">
                   <ResponsiveContainer width="100%" height="100%">
@@ -859,9 +925,10 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({ data }) => {
                           `${formatInt(val)} (${formatPct(item.payload.pct)})`,
                           'Hechos',
                         ]}
-                        contentStyle={{ borderRadius: 12, borderColor: '#cbd5e1', fontSize: 12 }}
+                        contentStyle={TOOLTIP_STYLE}
+                        itemStyle={{ color: '#e2e8f0' }}
                       />
-                      <Bar dataKey="hechos" radius={[6, 6, 0, 0]}>
+                      <Bar dataKey="hechos" radius={[8, 8, 0, 0]}>
                         {agg.porGenero.map((_, i) => (
                           <Cell
                             key={i}

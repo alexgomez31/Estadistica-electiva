@@ -8,85 +8,112 @@ export const PROJECT_META = {
     {
       name: 'Electiva III – Introducción a la Ciencia de Datos',
       professor: 'Carlos Eduardo Ruiz Quiñones',
-      focus: 'Pipeline ETL, auditoría de calidad de datos, análisis descriptivo, dashboard BI y componente predictivo.',
+      focus:
+        'Pipeline ETL, auditoría de calidad de datos, análisis descriptivo, dashboard BI y componente predictivo.',
     },
     {
       name: 'Estadística Inferencial',
       professor: 'Edith Janeth Potosi Estrada',
-      focus: 'Experimento aleatorio, axiomas, Teorema de Bayes, Grupo 2 (Distribución de Poisson), TLC, IC y pruebas de hipótesis.',
+      focus:
+        'Experimento aleatorio, axiomas, Teorema de Bayes, Grupo 2 (Distribución de Poisson), TLC, IC y pruebas de hipótesis.',
     },
   ],
   teamMembers: [
     {
+      order: 1,
       name: 'Jessica Vanesa Acosta Galíndez',
-      slides: 'Diapositivas 1, 2 y 3',
+      slides: 'Diapositivas 1 – 3',
+      slideRange: [1, 3] as [number, number],
       duration: '1 min 45 s',
-      difficulty: 'Introductorio',
-      scope: 'Portada, contextualización del hurto en Colombia y planteamiento del problema.',
+      difficulty: 'Apertura y Contexto',
+      scope:
+        'Portada institucional, contextualización del hurto en Colombia y planteamiento del problema.',
     },
     {
+      order: 2,
       name: 'Andrés Felipe Suaza Cerón',
-      slides: 'Diapositivas 4, 5 y 6',
+      slides: 'Diapositivas 4 – 6',
+      slideRange: [4, 6] as [number, number],
       duration: '2 min 00 s',
-      difficulty: 'Metodológico',
-      scope: 'Objetivos, fuentes oficiales de Datos Abiertos (DIJIN) y metodología interdisciplinaria.',
+      difficulty: 'Diseño Metodológico',
+      scope:
+        'Objetivo general y específicos, fuentes oficiales Socrata (DIJIN) y metodología de 6 fases.',
     },
     {
+      order: 3,
       name: 'Duban Alexander Gómez Hoyos',
-      slides: 'Diapositivas 8, 9 y 16',
-      duration: '2 min 45 s',
-      difficulty: 'Analítico',
-      scope: 'Análisis descriptivo, resultados del dashboard interactivo y principales hallazgos.',
-    },
-    {
-      name: 'Santiago Alexis Ordoñez Segura',
-      slides: 'Diapositivas 10, 11, 17 y 18',
-      duration: '2 min 30 s',
-      difficulty: 'Intermedio',
-      scope: 'Experimento aleatorio (Ω), reglas de probabilidad, conclusiones y cierre.',
-    },
-    {
-      name: 'Daniel Andrés Mera',
-      slides: 'Diapositivas 7, 12 y 15',
+      slides: 'Diapositivas 7 – 10',
+      slideRange: [7, 10] as [number, number],
       duration: '3 min 00 s',
-      difficulty: 'Alta complejidad',
-      scope: 'Auditoría ETL crítica (error DD/MM vs MM/DD), Teorema de Bayes paso a paso y modelado predictivo (Ridge vs HistGBR).',
+      difficulty: 'Ciencia de Datos (Electiva III)',
+      scope:
+        'Auditoría ETL (DD/MM/AAAA y nulos), análisis descriptivo, resultados del dashboard y modelo predictivo (Ridge vs HistGBR).',
     },
     {
+      order: 4,
       name: 'Yeison Rengifo',
-      slides: 'Diapositivas 13 y 14',
-      duration: '3 min 00 s',
-      difficulty: 'Máxima complejidad · Solo Estadística Inferencial',
-      scope: 'Distribución de Poisson (Grupo 2), sobredispersión, prueba χ², Teorema del Límite Central (S₇), IC 95% y contraste de hipótesis z.',
+      slides: 'Diapositivas 11 – 12',
+      slideRange: [11, 12] as [number, number],
+      duration: '2 min 45 s',
+      difficulty: 'Alta Complejidad · Solo Estadística Inferencial',
+      scope:
+        'Experimento aleatorio (Ω), axiomas y reglas de probabilidad, prueba matemática de dependencia y Teorema de Bayes paso a paso.',
+    },
+    {
+      order: 5,
+      name: 'Daniel Andrés Mera',
+      slides: 'Diapositivas 13 – 15',
+      slideRange: [13, 15] as [number, number],
+      duration: '3 min 15 s',
+      difficulty: 'Máxima Complejidad · Poisson y Ecuaciones',
+      scope:
+        'Modelo de Poisson (Grupo 2), ecuaciones PMF/CDF, sobredispersión, Teorema del Límite Central (S₇), bondad χ², IC 95% y contraste z.',
+    },
+    {
+      order: 6,
+      name: 'Santiago Alexis Ordoñez Segura',
+      slides: 'Diapositivas 16 – 18',
+      slideRange: [16, 18] as [number, number],
+      duration: '2 min 15 s',
+      difficulty: 'Síntesis y Cierre',
+      scope:
+        'Principales hallazgos cuantitativos, conclusiones interdisciplinarias y espacio de preguntas.',
     },
   ],
 } as const;
 
 export interface SlideAssignment {
   slideNumber: number;
+  blockOrder: number;
   presenter: string;
   duration: string;
-  level: 'Base' | 'Analítico' | 'Alta Dificultad' | 'Máxima Dificultad (Solo Estadística)';
+  level:
+    | 'Apertura'
+    | 'Metodológico'
+    | 'Ciencia de Datos'
+    | 'Alta Complejidad · Solo Estadística'
+    | 'Máxima Complejidad · Poisson y Ecuaciones'
+    | 'Cierre';
   notes: string;
 }
 
 export const SLIDE_ASSIGNMENTS: SlideAssignment[] = [
-  { slideNumber: 1, presenter: 'Jessica Vanesa Acosta Galíndez', duration: '30 s', level: 'Base', notes: 'Presentación institucional, título, asignaturas, docentes e integrantes.' },
-  { slideNumber: 2, presenter: 'Jessica Vanesa Acosta Galíndez', duration: '35 s', level: 'Base', notes: 'Contextualización de la problemática e importancia del análisis.' },
-  { slideNumber: 3, presenter: 'Jessica Vanesa Acosta Galíndez', duration: '40 s', level: 'Base', notes: 'Planteamiento del problema y pregunta central de investigación.' },
-  { slideNumber: 4, presenter: 'Andrés Felipe Suaza Cerón', duration: '35 s', level: 'Base', notes: 'Objetivo general y objetivos específicos.' },
-  { slideNumber: 5, presenter: 'Andrés Felipe Suaza Cerón', duration: '45 s', level: 'Base', notes: 'Fuentes Socrata (9vha-vh9n, 6sqw-8cg5, d4fr-sbn2) y cobertura 2010–jul 2026.' },
-  { slideNumber: 6, presenter: 'Andrés Felipe Suaza Cerón', duration: '40 s', level: 'Base', notes: 'Metodología de 6 fases integrando Electiva III y Estadística.' },
-  { slideNumber: 7, presenter: 'Daniel Andrés Mera', duration: '60 s', level: 'Alta Dificultad', notes: 'Auditoría técnica ETL: recuperación del 60.20% de fechas (MM/DD→DD/MM), nulos estructurales en género y preservación de 474,880 filas.' },
-  { slideNumber: 8, presenter: 'Duban Alexander Gómez Hoyos', duration: '55 s', level: 'Analítico', notes: 'Estadística descriptiva: medias, medianas, asimetría municipal y frecuencias.' },
-  { slideNumber: 9, presenter: 'Duban Alexander Gómez Hoyos', duration: '60 s', level: 'Analítico', notes: 'Lectura de tendencias temporales, pico 2024 y concentración departamental.' },
-  { slideNumber: 10, presenter: 'Santiago Alexis Ordoñez Segura', duration: '35 s', level: 'Analítico', notes: 'Formulación de experimentos aleatorios ε₁ y ε₂ y espacios muestrales Ω₁ y Ω₂.' },
-  { slideNumber: 11, presenter: 'Santiago Alexis Ordoñez Segura', duration: '50 s', level: 'Analítico', notes: 'Reglas de adición, multiplicación, complemento y dependencia estadística.' },
-  { slideNumber: 12, presenter: 'Daniel Andrés Mera', duration: '60 s', level: 'Alta Dificultad', notes: 'Teorema de Bayes aplicado: verosimilitudes, evidencia marginal P(B) y actualización previa→posteriori.' },
-  { slideNumber: 13, presenter: 'Yeison Rengifo', duration: '100 s', level: 'Máxima Dificultad (Solo Estadística)', notes: 'Núcleo Grupo 2 (Poisson): PMF, Popayán total vs Automotores (s²/λ=0.96), bondad de ajuste χ² y aproximación Normal TLC (S₇).' },
-  { slideNumber: 14, presenter: 'Yeison Rengifo', duration: '80 s', level: 'Máxima Dificultad (Solo Estadística)', notes: 'Unidades 3 y 4: Intervalo de Confianza 95% para λ, tamaño muestral y contraste bilateral z (2024 vs 2025).' },
-  { slideNumber: 15, presenter: 'Daniel Andrés Mera', duration: '60 s', level: 'Alta Dificultad', notes: 'Modelado predictivo: Regresión Ridge vs HistGBR vs Baseline, rezagos, MAE/RMSE/R² y limitaciones.' },
-  { slideNumber: 16, presenter: 'Duban Alexander Gómez Hoyos', duration: '50 s', level: 'Analítico', notes: 'Síntesis de los cuatro hallazgos cuantitativos principales.' },
-  { slideNumber: 17, presenter: 'Santiago Alexis Ordoñez Segura', duration: '40 s', level: 'Base', notes: 'Conclusiones metodológicas y aporte práctico de la plataforma.' },
-  { slideNumber: 18, presenter: 'Santiago Alexis Ordoñez Segura', duration: '25 s', level: 'Base', notes: 'Agradecimientos y apertura a preguntas del jurado.' },
+  { slideNumber: 1, blockOrder: 1, presenter: 'Jessica Vanesa Acosta Galíndez', duration: '30 s', level: 'Apertura', notes: 'Portada, título oficial, asignaturas, docentes e integrantes.' },
+  { slideNumber: 2, blockOrder: 1, presenter: 'Jessica Vanesa Acosta Galíndez', duration: '35 s', level: 'Apertura', notes: 'Contextualización de la problemática e importancia del análisis.' },
+  { slideNumber: 3, blockOrder: 1, presenter: 'Jessica Vanesa Acosta Galíndez', duration: '40 s', level: 'Apertura', notes: 'Planteamiento del problema y pregunta central de investigación.' },
+  { slideNumber: 4, blockOrder: 2, presenter: 'Andrés Felipe Suaza Cerón', duration: '35 s', level: 'Metodológico', notes: 'Objetivo general y objetivos específicos.' },
+  { slideNumber: 5, blockOrder: 2, presenter: 'Andrés Felipe Suaza Cerón', duration: '45 s', level: 'Metodológico', notes: 'Fuentes Socrata (9vha-vh9n, 6sqw-8cg5, d4fr-sbn2) y cobertura 2010–jul 2026.' },
+  { slideNumber: 6, blockOrder: 2, presenter: 'Andrés Felipe Suaza Cerón', duration: '40 s', level: 'Metodológico', notes: 'Metodología de 6 fases integrando Electiva III y Estadística.' },
+  { slideNumber: 7, blockOrder: 3, presenter: 'Duban Alexander Gómez Hoyos', duration: '45 s', level: 'Ciencia de Datos', notes: 'Auditoría ETL: corrección DD/MM/AAAA (recupera 60.20%) y nulos estructurales.' },
+  { slideNumber: 8, blockOrder: 3, presenter: 'Duban Alexander Gómez Hoyos', duration: '45 s', level: 'Ciencia de Datos', notes: 'Estadística descriptiva: medias, medianas, asimetría municipal y frecuencias.' },
+  { slideNumber: 9, blockOrder: 3, presenter: 'Duban Alexander Gómez Hoyos', duration: '45 s', level: 'Ciencia de Datos', notes: 'Resultados del dashboard: tendencia 2010–2026 y concentración territorial.' },
+  { slideNumber: 10, blockOrder: 3, presenter: 'Duban Alexander Gómez Hoyos', duration: '45 s', level: 'Ciencia de Datos', notes: 'Componente predictivo: Ridge vs HistGBR vs Baseline, MAE/RMSE/R² y limitaciones.' },
+  { slideNumber: 11, blockOrder: 4, presenter: 'Yeison Rengifo', duration: '75 s', level: 'Alta Complejidad · Solo Estadística', notes: 'Experimento aleatorio (ε₁, ε₂, Ω), reglas de unión/intersección/complemento e independencia.' },
+  { slideNumber: 12, blockOrder: 4, presenter: 'Yeison Rengifo', duration: '90 s', level: 'Alta Complejidad · Solo Estadística', notes: 'Probabilidad condicional y Teorema de Bayes completo con actualización de Llave Maestra.' },
+  { slideNumber: 13, blockOrder: 5, presenter: 'Daniel Andrés Mera', duration: '75 s', level: 'Máxima Complejidad · Poisson y Ecuaciones', notes: 'Modelo de Poisson (Grupo 2): ecuaciones PMF/CDF, λ y sobredispersión en Popayán.' },
+  { slideNumber: 14, blockOrder: 5, presenter: 'Daniel Andrés Mera', duration: '60 s', level: 'Máxima Complejidad · Poisson y Ecuaciones', notes: 'Ecuación reproductiva S₇ ~ Poisson(7λ), Teorema del Límite Central y bondad de ajuste χ².' },
+  { slideNumber: 15, blockOrder: 5, presenter: 'Daniel Andrés Mera', duration: '60 s', level: 'Máxima Complejidad · Poisson y Ecuaciones', notes: 'Unidades 3 y 4: Intervalo de Confianza 95%, tamaño de muestra y contraste bilateral z.' },
+  { slideNumber: 16, blockOrder: 6, presenter: 'Santiago Alexis Ordoñez Segura', duration: '50 s', level: 'Cierre', notes: 'Síntesis de los cuatro hallazgos cuantitativos respaldados por los datos.' },
+  { slideNumber: 17, blockOrder: 6, presenter: 'Santiago Alexis Ordoñez Segura', duration: '50 s', level: 'Cierre', notes: 'Conclusiones metodológicas y aporte práctico de la plataforma.' },
+  { slideNumber: 18, blockOrder: 6, presenter: 'Santiago Alexis Ordoñez Segura', duration: '35 s', level: 'Cierre', notes: 'Agradecimientos y espacio abierto de preguntas.' },
 ];
