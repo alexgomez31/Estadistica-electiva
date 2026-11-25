@@ -1,0 +1,18 @@
+# Dependencias y compilaciones web
+web/node_modules/
+web/dist/
+.vite/
+
+# Archivos crudos descargables con data_pipeline/fetch_all.py (>150 MB)
+data_pipeline/raw/
+
+# Entornos y caché de Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+*.log
