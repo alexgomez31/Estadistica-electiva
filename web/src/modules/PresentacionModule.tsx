@@ -32,6 +32,31 @@ import {
 } from '../lib/statistics';
 import { CHART_COLORS, formatDec, formatInt, formatPct, formatProb } from '../lib/format';
 
+// Logos oficiales tomados de la carpeta /logos del proyecto (copiados a web/public/logos)
+const BRAND_LOGO = '/logos/Versiones_Logo_Unimayor-01.png';
+const BRAND_THANKS = '/logos/channels4_profile.jpg';
+
+const INTEGRANTES = [
+  'Jessica Vanesa Acosta Galíndez',
+  'Andrés Felipe Suaza Cerón',
+  'Santiago Alexis Ordoñez Segura',
+  'Duban Alexander Gómez Hoyos',
+  'Yeison Rengifo',
+  'Daniel Andrés Mera',
+];
+
+/** Franjas decorativas azul/amarillo inspiradas en la identidad visual de Unimayor */
+const BrandStripes: React.FC = () => (
+  <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+    <div className="absolute -top-16 -left-24 w-72 h-16 bg-[#fbc515] rotate-[-35deg] shadow-lg" />
+    <div className="absolute top-6 -left-28 w-80 h-10 bg-[#0d4582] rotate-[-35deg] shadow-lg" />
+    <div className="absolute -top-10 left-40 w-56 h-8 bg-[#0d4582] rotate-[35deg] shadow-md" />
+    <div className="absolute -bottom-14 -right-20 w-80 h-16 bg-[#fbc515] rotate-[-35deg] shadow-lg" />
+    <div className="absolute bottom-10 -right-28 w-80 h-10 bg-[#0d4582] rotate-[-35deg] shadow-lg" />
+    <div className="absolute -bottom-8 right-48 w-56 h-8 bg-[#0d4582] rotate-[35deg] shadow-md" />
+  </div>
+);
+
 interface PresentacionModuleProps {
   data: AllPlatformData;
 }
@@ -139,40 +164,53 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
       tag: 'Portada',
       title: 'Portada del Proyecto Académico',
       render: () => (
-        <div className="h-full flex flex-col justify-between bg-gradient-to-br from-[#0f294a] via-[#133663] to-[#1d4ed8] text-white p-8 sm:p-12 rounded-2xl">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-sky-400/20 border border-sky-300/30">
-              Institución Universitaria Colegio Mayor del Cauca
-            </span>
-            <span className="text-xs font-mono text-sky-200">Ingeniería Informática · 2026</span>
-          </div>
-
-          <div className="space-y-4 max-w-4xl my-auto py-6">
-            <p className="text-xs sm:text-sm font-bold uppercase tracking-widest text-sky-300">
-              Proyecto Integrador · Sustentación Final (~15 min)
-            </p>
-            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold leading-tight">
-              Análisis Estadístico de las Diferentes Modalidades de Hurto en Colombia
-            </h2>
-            <p className="text-sm sm:text-base text-slate-200 max-w-2xl">
-              Integración de Ciencia de Datos y Modelado Probabilístico sobre{' '}
-              <strong>{formatInt(auditoria_etl.hechos_totales)}</strong> registros oficiales de la
-              Policía Nacional (DIJIN).
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-white/15 text-xs">
-            <div>
-              <p className="text-sky-300 font-semibold">Electiva III – Ciencia de Datos</p>
-              <p className="text-white/90 mt-0.5">Docente: Carlos E. Ruiz</p>
+        <div className="relative h-full min-h-[460px] flex items-center bg-white rounded-2xl border border-slate-100 overflow-hidden">
+          <BrandStripes />
+          <div className="relative z-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center px-8 sm:px-14 py-10">
+            <div className="lg:col-span-4 flex flex-col items-center text-center">
+              <img
+                src={BRAND_LOGO}
+                alt="Institución Universitaria Colegio Mayor del Cauca"
+                className="w-48 sm:w-60 h-auto drop-shadow-sm"
+              />
+              <p className="mt-3 text-xs font-semibold text-[#0d4582]">
+                Facultad de Ingeniería · Ingeniería Informática · 2026
+              </p>
             </div>
-            <div>
-              <p className="text-sky-300 font-semibold">Estadística Inferencial</p>
-              <p className="text-white/90 mt-0.5">Grupo 2 · Distribución de Poisson</p>
-            </div>
-            <div>
-              <p className="text-sky-300 font-semibold">Fuente Oficial</p>
-              <p className="text-white/90 mt-0.5">datos.gov.co (DIJIN · 2010–Jul 2026)</p>
+
+            <div className="lg:col-span-8 space-y-5">
+              <span className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-[#fbc515] text-[#0d4582]">
+                Proyecto Integrador
+              </span>
+              <h2 className="text-2xl sm:text-4xl font-extrabold leading-tight text-[#0d4582]">
+                Análisis Estadístico de las Diferentes Modalidades de Hurto en Colombia
+              </h2>
+              <div className="h-1.5 w-28 rounded-full bg-[#fbc515]" />
+
+              <div className="rounded-2xl bg-[#0d4582] text-white p-5 shadow-md">
+                <p className="text-xs font-bold uppercase tracking-widest text-[#fbc515] mb-3">
+                  Integrantes
+                </p>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 text-sm">
+                  {INTEGRANTES.map((nombre) => (
+                    <li key={nombre} className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-[#fbc515] shrink-0" />
+                      {nombre}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div className="p-3 rounded-xl border-l-4 border-[#fbc515] bg-[#fff6d6]">
+                  <p className="font-bold text-[#0d4582]">Electiva III – Ciencia de Datos</p>
+                  <p className="text-slate-700 mt-0.5">Docente: Carlos Eduardo Ruiz Quiñones</p>
+                </div>
+                <div className="p-3 rounded-xl border-l-4 border-[#0d4582] bg-slate-50">
+                  <p className="font-bold text-[#0d4582]">Estadística Inferencial · Grupo 2 (Poisson)</p>
+                  <p className="text-slate-700 mt-0.5">Docente: Edith Janeth Potosi Estrada</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -184,7 +222,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
       render: () => (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full items-center">
           <div className="lg:col-span-7 space-y-4">
-            <h3 className="text-2xl font-bold text-[#0f294a]">
+            <h3 className="text-2xl font-bold text-[#0d4582]">
               ¿Por qué analizar estadísticamente el hurto en Colombia?
             </h3>
             <p className="text-sm text-slate-600 leading-relaxed">
@@ -212,9 +250,9 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
             ].map(([val, lbl]) => (
               <div
                 key={lbl}
-                className="p-5 rounded-2xl bg-blue-50/70 border border-blue-100 text-center"
+                className="p-5 rounded-2xl bg-[#fff6d6] border border-[#fbe08a] text-center"
               >
-                <p className="text-2xl font-extrabold font-mono text-[#0f294a]">{val}</p>
+                <p className="text-2xl font-extrabold font-mono text-[#0d4582]">{val}</p>
                 <p className="text-xs text-slate-600 mt-1">{lbl}</p>
               </div>
             ))}
@@ -227,8 +265,8 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
       title: 'Planteamiento del Problema y Pregunta Principal',
       render: () => (
         <div className="space-y-6 my-auto">
-          <div className="p-6 rounded-2xl bg-[#0f294a] text-white space-y-2">
-            <p className="text-xs uppercase tracking-widest text-sky-300 font-bold">
+          <div className="p-6 rounded-2xl bg-[#0d4582] text-white space-y-2">
+            <p className="text-xs uppercase tracking-widest text-[#fbc515] font-bold">
               Pregunta Central de Investigación
             </p>
             <p className="text-xl sm:text-2xl font-bold leading-snug">
@@ -239,21 +277,21 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-              <strong className="text-[#0f294a] block mb-1">Situación Estudiada</strong>
+              <strong className="text-[#0d4582] block mb-1">Situación Estudiada</strong>
               <p className="text-xs text-slate-600">
                 Alta dispersión de registros en tres endpoints separados de la DIJIN y presencia de
                 inconsistencias de formato de fecha y nulos estructurales.
               </p>
             </div>
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-              <strong className="text-[#0f294a] block mb-1">Enfoque Territorial</strong>
+              <strong className="text-[#0d4582] block mb-1">Enfoque Territorial</strong>
               <p className="text-xs text-slate-600">
                 Contraste entre grandes capitales (Bogotá, Medellín, Cali) y contexto regional de
                 Popayán – Cauca (23,578 hechos).
               </p>
             </div>
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-              <strong className="text-[#0f294a] block mb-1">Reto Inferencial</strong>
+              <strong className="text-[#0d4582] block mb-1">Reto Inferencial</strong>
               <p className="text-xs text-slate-600">
                 Evaluar independencia entre modalidad y armas, actualización bayesiana y ajuste de
                 Poisson frente a posible sobredispersión.
@@ -268,9 +306,9 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
       title: 'Objetivo General y Objetivos Específicos',
       render: () => (
         <div className="space-y-5 my-auto">
-          <div className="p-5 rounded-2xl bg-blue-50 border border-blue-200">
-            <p className="text-xs font-bold uppercase text-blue-700 mb-1">Objetivo General</p>
-            <p className="text-base font-bold text-[#0f294a]">
+          <div className="p-5 rounded-2xl bg-[#fff6d6] border border-[#fbe08a]">
+            <p className="text-xs font-bold uppercase text-[#0d4582] mb-1">Objetivo General</p>
+            <p className="text-base font-bold text-[#0d4582]">
               Desarrollar un análisis estadístico integral de las modalidades de hurto en Colombia
               mediante técnicas de Ciencia de Datos e Inferencia Probabilística (Poisson y Bayes),
               presentado en una plataforma web interactiva.
@@ -298,7 +336,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
         <div className="space-y-4 my-auto">
           <p className="text-sm text-slate-600">
             Conjunto oficial <strong>Reporte Hurto por Modalidades – Policía Nacional (DIJIN)</strong>,
-            consultado en <span className="font-mono text-blue-700">datos.gov.co</span>. Cobertura
+            consultado en <span className="font-mono text-[#0d4582]">datos.gov.co</span>. Cobertura
             real verificada: <strong>01/01/2010 al 31/07/2026</strong>.
           </p>
           <table className="w-full text-left text-xs sm:text-sm border border-slate-200 rounded-xl overflow-hidden">
@@ -312,12 +350,12 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
             <tbody className="divide-y divide-slate-100">
               {data.dataScience.fuentes_socrata.map((s) => (
                 <tr key={s.recurso}>
-                  <td className="p-3 font-mono font-bold text-blue-700">{s.recurso}</td>
+                  <td className="p-3 font-mono font-bold text-[#0d4582]">{s.recurso}</td>
                   <td className="p-3">{s.descripcion_corta}</td>
                   <td className="p-3 text-right font-mono font-bold">{formatInt(s.filas)}</td>
                 </tr>
               ))}
-              <tr className="bg-blue-50/70 font-bold">
+              <tr className="bg-[#fff6d6] font-bold">
                 <td className="p-3">TOTAL</td>
                 <td className="p-3">7 modalidades · 9 variables por registro</td>
                 <td className="p-3 text-right font-mono">{formatInt(auditoria_etl.hechos_totales)}</td>
@@ -346,7 +384,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
               ['6. Predictivo', 'Ridge vs HistGBR con división temporal 2011–25'],
             ].map(([t, d]) => (
               <div key={t} className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
-                <p className="text-xs font-bold text-blue-700">{t}</p>
+                <p className="text-xs font-bold text-[#0d4582]">{t}</p>
                 <p className="text-xs text-slate-600 mt-1.5">{d}</p>
               </div>
             ))}
@@ -425,7 +463,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center my-auto">
           <div className="lg:col-span-5 space-y-3 text-xs">
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
-              <p className="font-bold text-[#0f294a]">Indicadores Numéricos Reales</p>
+              <p className="font-bold text-[#0d4582]">Indicadores Numéricos Reales</p>
               <p>
                 • <strong>Serie Anual (2010–2025):</strong> Media{' '}
                 {formatDec(estadisticas_descriptivas.serie_anual_completa_2010_2025.media)} |
@@ -443,8 +481,8 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
                 {formatDec(estadisticas_descriptivas.totales_municipales.mediana)} (fuerte asimetría)
               </p>
             </div>
-            <div className="p-4 rounded-xl bg-blue-50/70 border border-blue-100 space-y-1">
-              <p className="font-bold text-[#0f294a]">Modas Categóricas</p>
+            <div className="p-4 rounded-xl bg-[#fff6d6] border border-[#fbe08a] space-y-1">
+              <p className="font-bold text-[#0d4582]">Modas Categóricas</p>
               <p>• Modalidad: {estadisticas_descriptivas.moda_modalidad} (43.07%)</p>
               <p>• Medio: {estadisticas_descriptivas.moda_arma} (48.37%)</p>
               <p>• Territorio: {estadisticas_descriptivas.moda_departamento} (21.54%)</p>
@@ -478,7 +516,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
       render: () => (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 my-auto">
           <div>
-            <p className="text-xs font-bold text-[#0f294a] mb-2">
+            <p className="text-xs font-bold text-[#0d4582] mb-2">
               Evolución Anual Nacional (2010–2026*)
             </p>
             <div className="h-64">
@@ -491,8 +529,8 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
                   <Area
                     type="monotone"
                     dataKey="hechos"
-                    stroke="#1d4ed8"
-                    fill="#93c5fd"
+                    stroke="#0d4582"
+                    fill="#fbc515"
                     fillOpacity={0.45}
                   />
                 </AreaChart>
@@ -500,7 +538,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
             </div>
           </div>
           <div>
-            <p className="text-xs font-bold text-[#0f294a] mb-2">
+            <p className="text-xs font-bold text-[#0d4582] mb-2">
               Top 8 Departamentos / Bogotá D.C.
             </p>
             <div className="h-64">
@@ -510,7 +548,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
                   <XAxis type="number" tickFormatter={(v) => formatInt(v)} tick={{ fontSize: 10 }} />
                   <YAxis type="category" dataKey="nombre" width={115} tick={{ fontSize: 10 }} />
                   <Tooltip formatter={(v: number) => formatInt(v)} />
-                  <Bar dataKey="hechos" fill="#0f294a" radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="hechos" fill="#0d4582" radius={[0, 4, 4, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -524,7 +562,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
       render: () => (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 my-auto text-sm">
           <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-            <p className="text-xs font-bold uppercase text-blue-700">
+            <p className="text-xs font-bold uppercase text-[#0d4582]">
               Experimento ε₁ (Conteo Temporal — Poisson)
             </p>
             <p className="text-slate-700">
@@ -536,7 +574,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
             </p>
           </div>
           <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-            <p className="text-xs font-bold uppercase text-sky-700">
+            <p className="text-xs font-bold uppercase text-[#b38600]">
               Experimento ε₂ (Selección de Registro)
             </p>
             <p className="text-slate-700">
@@ -564,17 +602,17 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
         return (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-auto text-xs sm:text-sm">
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
-              <strong className="text-blue-700">Adición (Unión): Motocicletas (M) o Arma de Fuego (F)</strong>
+              <strong className="text-[#0d4582]">Adición (Unión): Motocicletas (M) o Arma de Fuego (F)</strong>
               <p className="font-mono">P(M ∪ F) = P(M) + P(F) − P(M ∩ F)</p>
-              <p className="font-mono text-[#0f294a]">
+              <p className="font-mono text-[#0d4582]">
                 = {formatProb(pM)} + {formatProb(pF)} − {formatProb(pMF)} ={' '}
                 <strong>{formatProb(pM + pF - pMF)}</strong>
               </p>
             </div>
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
-              <strong className="text-sky-700">Multiplicación (Intersección)</strong>
+              <strong className="text-[#b38600]">Multiplicación (Intersección)</strong>
               <p className="font-mono">P(M ∩ F) = P(M) · P(F | M)</p>
-              <p className="font-mono text-[#0f294a]">
+              <p className="font-mono text-[#0d4582]">
                 = {formatProb(pM)} × {formatProb(nMF / nM)} = <strong>{formatProb(pMF)}</strong> (
                 {formatInt(nMF)} hechos)
               </p>
@@ -582,7 +620,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
               <strong className="text-emerald-700">Complemento</strong>
               <p className="font-mono">P(Mᶜ) = 1 − P(M) = 1 − {formatProb(pM)}</p>
-              <p className="font-mono text-[#0f294a]">
+              <p className="font-mono text-[#0d4582]">
                 = <strong>{formatProb(1 - pM)}</strong> ({formatPct((1 - pM) * 100)})
               </p>
             </div>
@@ -605,8 +643,8 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
       render: () => (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center my-auto">
           <div className="lg:col-span-5 space-y-3 text-xs sm:text-sm">
-            <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 space-y-1">
-              <p className="font-bold text-[#0f294a]">Caso aplicado: Evidencia B = «LLAVE MAESTRA»</p>
+            <div className="p-4 rounded-xl bg-[#fff6d6] border border-[#fbe08a] space-y-1">
+              <p className="font-bold text-[#0d4582]">Caso aplicado: Evidencia B = «LLAVE MAESTRA»</p>
               <p className="text-slate-700">
                 P(Mᵢ | B) = [P(B | Mᵢ)·P(Mᵢ)] / P(B), con P(B) ={' '}
                 <strong className="font-mono">{formatProb(bayesArmaEjemplo.evidence)}</strong>
@@ -649,7 +687,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
                 <Tooltip formatter={(v: number) => `${v}%`} />
                 <Legend wrapperStyle={{ fontSize: 11 }} />
                 <Bar dataKey="Previa" fill="#94a3b8" />
-                <Bar dataKey="Posteriori" fill="#1d4ed8" />
+                <Bar dataKey="Posteriori" fill="#0d4582" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -662,11 +700,11 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
       render: () => (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center my-auto">
           <div className="lg:col-span-5 space-y-3 text-xs">
-            <div className="p-3.5 rounded-xl bg-slate-900 text-sky-300 font-mono">
+            <div className="p-3.5 rounded-xl bg-slate-900 text-[#fbc515] font-mono">
               P(X = k) = (e⁻λ · λᵏ) / k! &nbsp;|&nbsp; S₇ ~ Poisson(7λ)
             </div>
             <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
-              <p className="font-bold text-[#0f294a]">Popayán 2025 · Todas las modalidades</p>
+              <p className="font-bold text-[#0d4582]">Popayán 2025 · Todas las modalidades</p>
               <p>
                 52 semanas · 1,896 hechos · <strong>λ = {formatDec(popPoissonAll.lambda)}</strong>{' '}
                 · s² = {formatDec(popPoissonAll.varianza)} (s²/λ ={' '}
@@ -694,12 +732,12 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
                 <YAxis tick={{ fontSize: 10 }} />
                 <Tooltip formatter={(v: number) => v.toFixed(4)} />
                 <Legend wrapperStyle={{ fontSize: 11 }} />
-                <Bar dataKey="observado" name="Observado (Automotores)" fill="#93c5fd" />
+                <Bar dataKey="observado" name="Observado (Automotores)" fill="#fbc515" />
                 <Line
                   type="monotone"
                   dataKey="poisson"
                   name={`Poisson(λ=${popPoissonAuto.lambda.toFixed(2)})`}
-                  stroke="#0f294a"
+                  stroke="#0d4582"
                   strokeWidth={2.5}
                 />
               </ComposedChart>
@@ -714,7 +752,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
       render: () => (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 my-auto text-xs sm:text-sm">
           <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-            <span className="text-[11px] font-bold uppercase text-blue-700">
+            <span className="text-[11px] font-bold uppercase text-[#0d4582]">
               Unidad 3 · Intervalo de Confianza (Popayán 2025)
             </span>
             <p className="font-mono text-xs bg-white p-2.5 rounded-lg border border-slate-200">
@@ -725,7 +763,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
             </p>
             <p>
               IC 95% Poisson:{' '}
-              <strong className="font-mono text-blue-700">
+              <strong className="font-mono text-[#0d4582]">
                 [{formatDec(popHyp.icPoisson[0])} ; {formatDec(popHyp.icPoisson[1])}]
               </strong>{' '}
               hurtos/semana.
@@ -765,8 +803,8 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
                   key={m.nombre}
                   className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex justify-between items-center"
                 >
-                  <span className="font-semibold text-[#0f294a]">{m.nombre}</span>
-                  <span className="font-mono text-blue-700">
+                  <span className="font-semibold text-[#0d4582]">{m.nombre}</span>
+                  <span className="font-mono text-[#0d4582]">
                     MAE {m.mae} | R² {m.r2}
                   </span>
                 </div>
@@ -785,12 +823,12 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
                 <YAxis tickFormatter={(v) => formatInt(v)} tick={{ fontSize: 10 }} />
                 <Tooltip formatter={(v: number) => formatDec(v, 1)} />
                 <Legend wrapperStyle={{ fontSize: 11 }} />
-                <Line type="monotone" dataKey="real" name="Real" stroke="#0f294a" strokeWidth={2.5} />
+                <Line type="monotone" dataKey="real" name="Real" stroke="#0d4582" strokeWidth={2.5} />
                 <Line
                   type="monotone"
                   dataKey="ridge"
                   name="Ridge (mejor)"
-                  stroke="#1d4ed8"
+                  stroke="#0d4582"
                   strokeDasharray="5 3"
                   strokeWidth={2}
                 />
@@ -824,7 +862,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
             ],
           ].map(([t, d]) => (
             <div key={t} className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
-              <p className="font-bold text-[#0f294a]">{t}</p>
+              <p className="font-bold text-[#0d4582]">{t}</p>
               <p className="text-slate-600 leading-relaxed">{d}</p>
             </div>
           ))}
@@ -836,8 +874,8 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
       title: 'Conclusiones e Impacto del Proyecto',
       render: () => (
         <div className="space-y-4 my-auto text-sm">
-          <div className="p-5 rounded-2xl bg-blue-50/60 border border-blue-100">
-            <strong className="text-[#0f294a] block mb-1">Aporte Metodológico</strong>
+          <div className="p-5 rounded-2xl bg-[#fff6d6] border border-[#fbe08a]">
+            <strong className="text-[#0d4582] block mb-1">Aporte Metodológico</strong>
             <p className="text-slate-700 text-xs sm:text-sm">
               La integración entre Ciencia de Datos e Inferencia Estadística demuestra que la
               calidad del preprocesamiento determina directamente la validez de cualquier parámetro
@@ -859,15 +897,23 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
       tag: 'Cierre',
       title: 'Agradecimientos y Espacio de Preguntas',
       render: () => (
-        <div className="h-full flex flex-col items-center justify-center text-center bg-gradient-to-br from-[#0f294a] to-[#1d4ed8] text-white rounded-2xl p-8 space-y-5">
-          <PresentationIcon className="w-12 h-12 text-sky-300" />
-          <h3 className="text-3xl sm:text-4xl font-extrabold">¡Muchas Gracias!</h3>
-          <p className="text-sm sm:text-base text-slate-200 max-w-xl">
-            Observatorio Analítico de Hurtos en Colombia · Electiva III (Ciencia de Datos) &amp;
-            Estadística Inferencial (Grupo 2 – Poisson).
-          </p>
-          <div className="px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-xs font-mono">
-            Espacio abierto para preguntas del jurado y docentes
+        <div className="h-full min-h-[460px] grid grid-cols-1 lg:grid-cols-2 bg-white rounded-2xl border border-slate-100 overflow-hidden">
+          <img
+            src={BRAND_THANKS}
+            alt="Institución Universitaria Colegio Mayor del Cauca"
+            className="w-full h-full max-h-[560px] object-cover"
+          />
+          <div className="flex flex-col items-center justify-center text-center p-8 sm:p-12 space-y-5 bg-[#0d4582] text-white">
+            <PresentationIcon className="w-12 h-12 text-[#fbc515]" />
+            <h3 className="text-4xl sm:text-5xl font-extrabold">¡Muchas Gracias!</h3>
+            <div className="h-1.5 w-24 rounded-full bg-[#fbc515]" />
+            <p className="text-sm sm:text-base text-slate-100 max-w-md">
+              Análisis Estadístico de las Modalidades de Hurto en Colombia · Electiva III (Ciencia
+              de Datos) &amp; Estadística Inferencial (Grupo 2 – Poisson).
+            </p>
+            <div className="px-4 py-2 rounded-xl bg-[#fbc515] text-[#0d4582] text-sm font-bold">
+              ¿Preguntas?
+            </div>
           </div>
         </div>
       ),
@@ -882,7 +928,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
       {/* Barra superior de control */}
       <div className="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-bold text-[#0f294a]">
+          <h2 className="text-lg font-bold text-[#0d4582]">
             Presentación Académica Integrada
           </h2>
           <p className="text-xs text-slate-500">
@@ -915,7 +961,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
           <button
             type="button"
             onClick={toggleFullscreen}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#0f294a] text-white text-xs font-semibold hover:bg-blue-800 cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#0d4582] text-white text-xs font-semibold hover:bg-[#0a3566] cursor-pointer"
           >
             {isFullscreen ? (
               <>
@@ -941,21 +987,24 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
         <div className="space-y-3">
           <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
             <div
-              className="h-full bg-blue-600 transition-all duration-300"
+              className="h-full bg-gradient-to-r from-[#0d4582] to-[#fbc515] transition-all duration-300"
               style={{ width: `${progressPct}%` }}
             />
           </div>
           {slideIdx > 0 && slideIdx < totalSlides - 1 && (
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-blue-700">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#0d4582]">
                   {current.tag}
                 </span>
-                <h3 className="text-xl font-bold text-[#0f294a]">{current.title}</h3>
+                <h3 className="text-xl font-bold text-[#0d4582]">{current.title}</h3>
               </div>
-              <span className="text-xs font-mono text-slate-400">
-                {slideIdx + 1} / {totalSlides}
-              </span>
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-mono text-slate-400">
+                  {slideIdx + 1} / {totalSlides}
+                </span>
+                <img src={BRAND_LOGO} alt="Unimayor" className="h-12 w-auto" />
+              </div>
             </div>
           )}
         </div>
@@ -966,7 +1015,10 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
         {/* Controles internos en pantalla completa */}
         {isFullscreen && (
           <div className="flex items-center justify-between pt-3 border-t border-slate-100 text-xs text-slate-500">
-            <span>Observatorio Hurtos Colombia · Unimayor</span>
+            <span className="flex items-center gap-2">
+              <img src={BRAND_LOGO} alt="" className="h-6 w-auto" />
+              Institución Universitaria Colegio Mayor del Cauca
+            </span>
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -980,7 +1032,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
                 type="button"
                 onClick={goNext}
                 disabled={slideIdx === totalSlides - 1}
-                className="px-3 py-1 rounded-lg bg-[#0f294a] text-white disabled:opacity-40"
+                className="px-3 py-1 rounded-lg bg-[#0d4582] text-white disabled:opacity-40"
               >
                 Siguiente
               </button>
@@ -999,7 +1051,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
               onClick={() => setSlideIdx(idx)}
               className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                 idx === slideIdx
-                  ? 'bg-[#0f294a] text-white'
+                  ? 'bg-[#0d4582] text-white'
                   : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
               }`}
             >
