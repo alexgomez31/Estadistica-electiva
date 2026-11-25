@@ -55,7 +55,7 @@ export const PROJECT_META = {
       slides: 'Diapositivas 11 – 12',
       slideRange: [11, 12] as [number, number],
       duration: '2 min 45 s',
-      difficulty: 'Alta Complejidad · Solo Estadística Inferencial',
+      difficulty: 'Probabilidad y Bayes',
       scope:
         'Experimento aleatorio (Ω), axiomas y reglas de probabilidad, prueba matemática de dependencia y Teorema de Bayes paso a paso.',
     },
@@ -65,7 +65,7 @@ export const PROJECT_META = {
       slides: 'Diapositivas 13 – 15',
       slideRange: [13, 15] as [number, number],
       duration: '3 min 15 s',
-      difficulty: 'Máxima Complejidad · Poisson y Ecuaciones',
+      difficulty: 'Modelo de Poisson e Inferencia',
       scope:
         'Modelo de Poisson (Grupo 2), ecuaciones PMF/CDF, sobredispersión, Teorema del Límite Central (S₇), bondad χ², IC 95% y contraste z.',
     },
@@ -91,8 +91,8 @@ export interface SlideAssignment {
     | 'Apertura'
     | 'Metodológico'
     | 'Ciencia de Datos'
-    | 'Alta Complejidad · Solo Estadística'
-    | 'Máxima Complejidad · Poisson y Ecuaciones'
+    | 'Probabilidad y Bayes'
+    | 'Modelo de Poisson e Inferencia'
     | 'Cierre';
   notes: string;
 }
@@ -108,11 +108,11 @@ export const SLIDE_ASSIGNMENTS: SlideAssignment[] = [
   { slideNumber: 8, blockOrder: 3, presenter: 'Duban Alexander Gómez Hoyos', duration: '45 s', level: 'Ciencia de Datos', notes: 'Estadística descriptiva: medias, medianas, asimetría municipal y frecuencias.' },
   { slideNumber: 9, blockOrder: 3, presenter: 'Duban Alexander Gómez Hoyos', duration: '45 s', level: 'Ciencia de Datos', notes: 'Resultados del dashboard: tendencia 2010–2026 y concentración territorial.' },
   { slideNumber: 10, blockOrder: 3, presenter: 'Duban Alexander Gómez Hoyos', duration: '45 s', level: 'Ciencia de Datos', notes: 'Componente predictivo: Ridge vs HistGBR vs Baseline, MAE/RMSE/R² y limitaciones.' },
-  { slideNumber: 11, blockOrder: 4, presenter: 'Yeison Rengifo', duration: '75 s', level: 'Alta Complejidad · Solo Estadística', notes: 'Experimento aleatorio (ε₁, ε₂, Ω), reglas de unión/intersección/complemento e independencia.' },
-  { slideNumber: 12, blockOrder: 4, presenter: 'Yeison Rengifo', duration: '90 s', level: 'Alta Complejidad · Solo Estadística', notes: 'Probabilidad condicional y Teorema de Bayes completo con actualización de Llave Maestra.' },
-  { slideNumber: 13, blockOrder: 5, presenter: 'Daniel Andrés Mera', duration: '75 s', level: 'Máxima Complejidad · Poisson y Ecuaciones', notes: 'Modelo de Poisson (Grupo 2): ecuaciones PMF/CDF, λ y sobredispersión en Popayán.' },
-  { slideNumber: 14, blockOrder: 5, presenter: 'Daniel Andrés Mera', duration: '60 s', level: 'Máxima Complejidad · Poisson y Ecuaciones', notes: 'Ecuación reproductiva S₇ ~ Poisson(7λ), Teorema del Límite Central y bondad de ajuste χ².' },
-  { slideNumber: 15, blockOrder: 5, presenter: 'Daniel Andrés Mera', duration: '60 s', level: 'Máxima Complejidad · Poisson y Ecuaciones', notes: 'Unidades 3 y 4: Intervalo de Confianza 95%, tamaño de muestra y contraste bilateral z.' },
+  { slideNumber: 11, blockOrder: 4, presenter: 'Yeison Rengifo', duration: '75 s', level: 'Probabilidad y Bayes', notes: 'Experimento aleatorio (ε₁, ε₂, Ω), reglas de unión/intersección/complemento e independencia.' },
+  { slideNumber: 12, blockOrder: 4, presenter: 'Yeison Rengifo', duration: '90 s', level: 'Probabilidad y Bayes', notes: 'Probabilidad condicional y Teorema de Bayes completo con actualización de Llave Maestra.' },
+  { slideNumber: 13, blockOrder: 5, presenter: 'Daniel Andrés Mera', duration: '75 s', level: 'Modelo de Poisson e Inferencia', notes: 'Modelo de Poisson (Grupo 2): ecuaciones PMF/CDF, λ y sobredispersión en Popayán.' },
+  { slideNumber: 14, blockOrder: 5, presenter: 'Daniel Andrés Mera', duration: '60 s', level: 'Modelo de Poisson e Inferencia', notes: 'Ecuación reproductiva S₇ ~ Poisson(7λ), Teorema del Límite Central y bondad de ajuste χ².' },
+  { slideNumber: 15, blockOrder: 5, presenter: 'Daniel Andrés Mera', duration: '60 s', level: 'Modelo de Poisson e Inferencia', notes: 'Unidades 3 y 4: Intervalo de Confianza 95%, tamaño de muestra y contraste bilateral z.' },
   { slideNumber: 16, blockOrder: 6, presenter: 'Santiago Alexis Ordoñez Segura', duration: '50 s', level: 'Cierre', notes: 'Síntesis de los cuatro hallazgos cuantitativos respaldados por los datos.' },
   { slideNumber: 17, blockOrder: 6, presenter: 'Santiago Alexis Ordoñez Segura', duration: '50 s', level: 'Cierre', notes: 'Conclusiones metodológicas y aporte práctico de la plataforma.' },
   { slideNumber: 18, blockOrder: 6, presenter: 'Santiago Alexis Ordoñez Segura', duration: '35 s', level: 'Cierre', notes: 'Agradecimientos y espacio abierto de preguntas.' },
