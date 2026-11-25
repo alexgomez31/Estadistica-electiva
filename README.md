@@ -1,6 +1,14 @@
-# Observatorio Analítico de Hurtos en Colombia (2010 – julio 2026)
+# ANÁLISIS PROBABILÍSTICO DEL HURTO EN COLOMBIA CON DATOS ABIERTOS DE LA POLICÍA NACIONAL: MODELO DE POISSON, TEOREMA DE BAYES
 
-Plataforma web académica interdisciplinaria que integra las asignaturas **Electiva III – Introducción a la Ciencia de Datos** (Docente: Carlos E. Ruiz) y **Estadística Inferencial – Proyecto de Aula (Grupo 2: Distribución de Poisson)** de Ingeniería Informática en la **Institución Universitaria Colegio Mayor del Cauca**.
+Plataforma web académica interdisciplinaria que integra las asignaturas **Electiva III – Introducción a la Ciencia de Datos** (Docente: **Carlos Eduardo Ruiz Quiñones**) y **Estadística Inferencial – Proyecto de Aula (Grupo 2: Distribución de Poisson)** (Docente: **Edith Janeth Potosi Estrada**) en Ingeniería Informática de la **Institución Universitaria Colegio Mayor del Cauca**.
+
+### Integrantes
+- Jessica Vanesa Acosta Galíndez
+- Andrés Felipe Suaza Cerón
+- Duban Alexander Gómez Hoyos
+- Santiago Alexis Ordoñez Segura
+- Daniel Andrés Mera
+- Yeison Rengifo
 
 ---
 

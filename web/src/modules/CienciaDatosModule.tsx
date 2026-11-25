@@ -61,7 +61,7 @@ export const CienciaDatosModule: React.FC<CienciaDatosModuleProps> = ({ data }) 
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-blue-700">
-              Electiva III · Introducción a la Ciencia de Datos (Docente: Carlos E. Ruiz)
+              Electiva III · Introducción a la Ciencia de Datos (Docente: Carlos Eduardo Ruiz Quiñones)
             </span>
             <h2 className="text-2xl font-bold text-[#0f294a] mt-1">
               Pipeline Integral de Ciencia de Datos

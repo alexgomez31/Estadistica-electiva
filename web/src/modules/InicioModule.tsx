@@ -4,16 +4,20 @@ import {
   BarChart3,
   BookOpen,
   Calendar,
+  Clock,
   Database,
   FileSpreadsheet,
+  GraduationCap,
   Layers,
   MapPin,
   Presentation,
   ShieldCheck,
   Sigma,
   Target,
+  Users,
 } from 'lucide-react';
 import type { AllPlatformData, ModuleId } from '../types/analytics';
+import { PROJECT_META } from '../data/projectMeta';
 import { formatInt } from '../lib/format';
 import { KpiCard } from '../components/KpiCard';
 
@@ -32,15 +36,15 @@ export const InicioModule: React.FC<InicioModuleProps> = ({ data, onNavigate }) 
         <div className="relative z-10 max-w-4xl space-y-5">
           <div className="flex flex-wrap items-center gap-2">
             <span className="px-3 py-1 rounded-full text-xs font-semibold bg-sky-400/20 border border-sky-300/30 text-sky-100">
-              Proyecto Académico Interdisciplinario · Ingeniería Informática
+              Asignaturas: Electiva III y Estadística Inferencial
             </span>
             <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-400/20 border border-emerald-300/30 text-emerald-100">
-              Institución Universitaria Colegio Mayor del Cauca
+              {PROJECT_META.institution} · {PROJECT_META.program}
             </span>
           </div>
 
-          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
-            Análisis Estadístico de las Diferentes Modalidades de Hurto en Colombia
+          <h2 className="text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight">
+            {PROJECT_META.title}
           </h2>
 
           <p className="text-sm sm:text-base text-slate-200 leading-relaxed max-w-3xl">
@@ -158,7 +162,8 @@ export const InicioModule: React.FC<InicioModuleProps> = ({ data, onNavigate }) 
             <code className="text-xs bg-slate-100 px-1.5 py-0.5 rounded">datos.gov.co</code>, este
             proyecto transforma tres conjuntos de datos crudos en conocimiento verificable mediante
             limpieza reproducible, estadística descriptiva, modelado predictivo y análisis
-            inferencial basado en la <strong>Distribución de Poisson</strong>.
+            inferencial basado en la <strong>Distribución de Poisson</strong> y el{' '}
+            <strong>Teorema de Bayes</strong>.
           </p>
         </div>
 
@@ -208,37 +213,36 @@ export const InicioModule: React.FC<InicioModuleProps> = ({ data, onNavigate }) 
         </div>
       </section>
 
-      {/* Asignaturas y Fuentes Oficiales */}
+      {/* Asignaturas, Docentes y Fuentes Oficiales */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
-          <h3 className="text-lg font-bold text-[#0f294a]">Asignaturas Integradas</h3>
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-lg bg-blue-50 text-blue-700">
+              <GraduationCap className="w-5 h-5" />
+            </div>
+            <h3 className="text-lg font-bold text-[#0f294a]">Asignaturas y Docentes</h3>
+          </div>
           <div className="space-y-3">
             <div className="p-4 rounded-xl border border-blue-100 bg-blue-50/50">
-              <p className="text-xs font-bold uppercase text-blue-700">Asignatura 1</p>
+              <p className="text-xs font-bold uppercase text-blue-700">Electiva III</p>
               <p className="text-sm font-bold text-[#0f294a] mt-0.5">
-                Electiva III – Introducción a la Ciencia de Datos
+                {PROJECT_META.subjects[0].name}
               </p>
-              <p className="text-xs text-slate-600 mt-1">
-                Docente: <strong>Carlos E. Ruiz</strong> · Ciclo CRISP-DM/ETL, calidad de datos,
-                análisis descriptivo, tablero BI y componente predictivo.
+              <p className="text-xs text-slate-700 mt-1">
+                Docente: <strong>{PROJECT_META.subjects[0].professor}</strong>
               </p>
+              <p className="text-xs text-slate-600 mt-1">{PROJECT_META.subjects[0].focus}</p>
             </div>
             <div className="p-4 rounded-xl border border-sky-100 bg-sky-50/50">
-              <p className="text-xs font-bold uppercase text-sky-700">Asignatura 2</p>
+              <p className="text-xs font-bold uppercase text-sky-700">Estadística Inferencial</p>
               <p className="text-sm font-bold text-[#0f294a] mt-0.5">
-                Estadística Inferencial (Ingeniería Informática)
+                {PROJECT_META.subjects[1].name} ({PROJECT_META.program})
               </p>
-              <p className="text-xs text-slate-600 mt-1">
-                Proyecto de Aula · Experimento aleatorio, axiomas, Teorema de Bayes,{' '}
-                <strong>Grupo 2: Distribución de Poisson</strong>, TLC, intervalos de confianza y
-                pruebas de hipótesis.
+              <p className="text-xs text-slate-700 mt-1">
+                Docente: <strong>{PROJECT_META.subjects[1].professor}</strong>
               </p>
+              <p className="text-xs text-slate-600 mt-1">{PROJECT_META.subjects[1].focus}</p>
             </div>
-            <p className="text-xs text-slate-500 pt-1">
-              Nota de trazabilidad académica: La documentación fuente del proyecto no registra una
-              lista nominal de estudiantes ni docente de Estadística Inferencial, por lo que no se
-              incluyen nombres ficticios.
-            </p>
           </div>
         </div>
 
@@ -314,6 +318,74 @@ export const InicioModule: React.FC<InicioModuleProps> = ({ data, onNavigate }) 
               </p>
             </button>
           </div>
+        </div>
+      </section>
+
+      {/* Integrantes y Repartición de Exposición */}
+      <section className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-lg bg-slate-100 text-[#0f294a]">
+              <Users className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-[#0f294a]">
+                Integrantes del Equipo y Repartición de Sustentación
+              </h3>
+              <p className="text-xs text-slate-500">
+                Distribución planificada para 15 minutos totales · Asignación técnica diferenciada
+                para los bloques de mayor complejidad
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => onNavigate('presentacion')}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0f294a] text-white text-xs font-semibold hover:bg-blue-800 cursor-pointer self-start"
+          >
+            <Presentation className="w-3.5 h-3.5" />
+            Ir a las Diapositivas
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          {PROJECT_META.teamMembers.map((member) => {
+            const isHard =
+              member.name === 'Daniel Andrés Mera' || member.name === 'Yeison Rengifo';
+            return (
+              <div
+                key={member.name}
+                className={`p-4 rounded-xl border space-y-2 ${
+                  isHard
+                    ? 'bg-blue-50/50 border-blue-200'
+                    : 'bg-slate-50/70 border-slate-200/80'
+                }`}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <p className="text-sm font-bold text-[#0f294a]">{member.name}</p>
+                  <span className="inline-flex items-center gap-1 text-[11px] font-mono font-semibold px-2 py-0.5 rounded-full bg-white border border-slate-200 text-slate-700 shrink-0">
+                    <Clock className="w-3 h-3 text-blue-600" />
+                    {member.duration}
+                  </span>
+                </div>
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-[#0f294a] text-white">
+                    {member.slides}
+                  </span>
+                  <span
+                    className={`text-[11px] font-semibold px-2 py-0.5 rounded border ${
+                      isHard
+                        ? 'bg-orange-50 text-orange-800 border-orange-200'
+                        : 'bg-white text-slate-600 border-slate-200'
+                    }`}
+                  >
+                    {member.difficulty}
+                  </span>
+                </div>
+                <p className="text-xs text-slate-600 leading-relaxed">{member.scope}</p>
+              </div>
+            );
+          })}
         </div>
       </section>
     </div>

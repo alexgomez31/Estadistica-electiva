@@ -2,9 +2,12 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   ChevronLeft,
   ChevronRight,
+  Clock,
   Maximize2,
   Minimize2,
   Presentation as PresentationIcon,
+  UserCheck,
+  Users,
 } from 'lucide-react';
 import {
   Area,
@@ -23,6 +26,7 @@ import {
   YAxis,
 } from 'recharts';
 import type { AllPlatformData } from '../types/analytics';
+import { PROJECT_META, SLIDE_ASSIGNMENTS } from '../data/projectMeta';
 import { aggregateDashboard } from '../lib/cubeEngine';
 import {
   computeBayesPartition,
@@ -39,6 +43,7 @@ interface PresentacionModuleProps {
 export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) => {
   const [slideIdx, setSlideIdx] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showSchedule, setShowSchedule] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
 
   const totalSlides = 18;
@@ -139,40 +144,51 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
       tag: 'Portada',
       title: 'Portada del Proyecto Académico',
       render: () => (
-        <div className="h-full flex flex-col justify-between bg-gradient-to-br from-[#0f294a] via-[#133663] to-[#1d4ed8] text-white p-8 sm:p-12 rounded-2xl">
+        <div className="h-full flex flex-col justify-between bg-gradient-to-br from-[#0f294a] via-[#133663] to-[#1d4ed8] text-white p-6 sm:p-10 rounded-2xl">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="px-3 py-1 rounded-full text-xs font-semibold bg-sky-400/20 border border-sky-300/30">
-              Institución Universitaria Colegio Mayor del Cauca
+              {PROJECT_META.institution} · {PROJECT_META.program}
             </span>
-            <span className="text-xs font-mono text-sky-200">Ingeniería Informática · 2026</span>
+            <span className="text-xs font-mono text-sky-200">
+              Asignaturas: Electiva III y Estadística Inferencial
+            </span>
           </div>
 
-          <div className="space-y-4 max-w-4xl my-auto py-6">
-            <p className="text-xs sm:text-sm font-bold uppercase tracking-widest text-sky-300">
-              Proyecto Integrador · Sustentación Final (~15 min)
+          <div className="space-y-3 max-w-4xl my-auto py-4">
+            <p className="text-xs font-bold uppercase tracking-widest text-sky-300">
+              Proyecto Integrador · Sustentación Académica (15 min)
             </p>
-            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold leading-tight">
-              Análisis Estadístico de las Diferentes Modalidades de Hurto en Colombia
+            <h2 className="text-xl sm:text-3xl lg:text-4xl font-extrabold leading-tight">
+              {PROJECT_META.title}
             </h2>
-            <p className="text-sm sm:text-base text-slate-200 max-w-2xl">
-              Integración de Ciencia de Datos y Modelado Probabilístico sobre{' '}
-              <strong>{formatInt(auditoria_etl.hechos_totales)}</strong> registros oficiales de la
-              Policía Nacional (DIJIN).
+            <p className="text-xs sm:text-sm text-slate-200 max-w-3xl">
+              Análisis descriptivo, auditoría ETL, inferencia estadística (Grupo 2 – Poisson) y
+              actualización bayesiana sobre <strong>{formatInt(auditoria_etl.hechos_totales)}</strong>{' '}
+              registros oficiales de la Policía Nacional (DIJIN).
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-white/15 text-xs">
-            <div>
-              <p className="text-sky-300 font-semibold">Electiva III – Ciencia de Datos</p>
-              <p className="text-white/90 mt-0.5">Docente: Carlos E. Ruiz</p>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 pt-4 border-t border-white/15 text-xs">
+            <div className="lg:col-span-7">
+              <p className="text-sky-300 font-semibold uppercase tracking-wider text-[10px] mb-1.5">
+                Integrantes del Equipo
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-white/95">
+                {PROJECT_META.teamMembers.map((m) => (
+                  <p key={m.name}>• {m.name}</p>
+                ))}
+              </div>
             </div>
-            <div>
-              <p className="text-sky-300 font-semibold">Estadística Inferencial</p>
-              <p className="text-white/90 mt-0.5">Grupo 2 · Distribución de Poisson</p>
-            </div>
-            <div>
-              <p className="text-sky-300 font-semibold">Fuente Oficial</p>
-              <p className="text-white/90 mt-0.5">datos.gov.co (DIJIN · 2010–Jul 2026)</p>
+            <div className="lg:col-span-5 space-y-1.5">
+              <p className="text-sky-300 font-semibold uppercase tracking-wider text-[10px]">
+                Docentes
+              </p>
+              <p className="text-white/95">
+                • <strong>Edith Janeth Potosi Estrada</strong> (Estadística Inferencial)
+              </p>
+              <p className="text-white/95">
+                • <strong>Carlos Eduardo Ruiz Quiñones</strong> (Electiva III)
+              </p>
             </div>
           </div>
         </div>
@@ -185,7 +201,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full items-center">
           <div className="lg:col-span-7 space-y-4">
             <h3 className="text-2xl font-bold text-[#0f294a]">
-              ¿Por qué analizar estadísticamente el hurto en Colombia?
+              ¿Por qué analizar probabilísticamente el hurto en Colombia?
             </h3>
             <p className="text-sm text-slate-600 leading-relaxed">
               El hurto contra el patrimonio económico afecta de manera diferenciada a comercios,
@@ -199,7 +215,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
               </li>
               <li className="p-3 rounded-xl bg-slate-50 border border-slate-200">
                 <strong>Enfoque dual:</strong> Combina ETL y analítica visual (Electiva III) con
-                probabilidad, Bayes y Poisson (Estadística Inferencial).
+                probabilidad, Teorema de Bayes y Modelo de Poisson (Estadística Inferencial).
               </li>
             </ul>
           </div>
@@ -233,8 +249,8 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
             </p>
             <p className="text-xl sm:text-2xl font-bold leading-snug">
               ¿Cuál es el comportamiento descriptivo, territorial y probabilístico de las modalidades
-              de hurto en Colombia (2010–2026), y en qué medida la Distribución de Poisson describe
-              su ocurrencia semanal?
+              de hurto en Colombia (2010–2026), y en qué medida la Distribución de Poisson y el
+              Teorema de Bayes describen su ocurrencia?
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
@@ -271,9 +287,9 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
           <div className="p-5 rounded-2xl bg-blue-50 border border-blue-200">
             <p className="text-xs font-bold uppercase text-blue-700 mb-1">Objetivo General</p>
             <p className="text-base font-bold text-[#0f294a]">
-              Desarrollar un análisis estadístico integral de las modalidades de hurto en Colombia
-              mediante técnicas de Ciencia de Datos e Inferencia Probabilística (Poisson y Bayes),
-              presentado en una plataforma web interactiva.
+              Desarrollar un análisis estadístico y probabilístico integral del hurto en Colombia
+              mediante Ciencia de Datos, Modelo de Poisson y Teorema de Bayes sobre Datos Abiertos
+              de la Policía Nacional, presentado en una plataforma web interactiva.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
@@ -555,8 +571,8 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
       title: 'Reglas de Probabilidad (Con Cifras Reales)',
       render: () => {
         const N = data.inferential.total_hechos;
-        const nM = 497736; // Motocicletas
-        const nF = 274849; // Arma de fuego
+        const nM = 497736;
+        const nF = 274849;
         const nMF = data.inferential.mod_x_arma['ARTÍCULO 239. HURTO MOTOCICLETAS']?.['ARMA DE FUEGO'] ?? 0;
         const pM = nM / N;
         const pF = nF / N;
@@ -862,9 +878,11 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
         <div className="h-full flex flex-col items-center justify-center text-center bg-gradient-to-br from-[#0f294a] to-[#1d4ed8] text-white rounded-2xl p-8 space-y-5">
           <PresentationIcon className="w-12 h-12 text-sky-300" />
           <h3 className="text-3xl sm:text-4xl font-extrabold">¡Muchas Gracias!</h3>
-          <p className="text-sm sm:text-base text-slate-200 max-w-xl">
-            Observatorio Analítico de Hurtos en Colombia · Electiva III (Ciencia de Datos) &amp;
-            Estadística Inferencial (Grupo 2 – Poisson).
+          <p className="text-sm sm:text-base text-slate-200 max-w-2xl">
+            {PROJECT_META.title}
+          </p>
+          <p className="text-xs text-sky-200">
+            Docentes: Edith Janeth Potosi Estrada · Carlos Eduardo Ruiz Quiñones
           </p>
           <div className="px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-xs font-mono">
             Espacio abierto para preguntas del jurado y docentes
@@ -875,6 +893,7 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
   ];
 
   const current = slides[slideIdx];
+  const assignment = SLIDE_ASSIGNMENTS[slideIdx];
   const progressPct = ((slideIdx + 1) / totalSlides) * 100;
 
   return (
@@ -890,7 +909,19 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setShowSchedule((s) => !s)}
+            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-semibold cursor-pointer ${
+              showSchedule
+                ? 'bg-blue-50 border-blue-300 text-blue-800'
+                : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+            }`}
+          >
+            <Users className="w-3.5 h-3.5" />
+            Repartición (15 min)
+          </button>
           <span className="text-xs font-mono font-semibold text-slate-600 px-3 py-1.5 rounded-xl bg-slate-100">
             Diapositiva {slideIdx + 1} de {totalSlides}
           </span>
@@ -930,14 +961,72 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
         </div>
       </div>
 
+      {/* Panel desplegable de repartición por expositor */}
+      {showSchedule && (
+        <div className="bg-white rounded-2xl border border-blue-200 p-5 shadow-xs space-y-3">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <h3 className="text-sm font-bold text-[#0f294a]">
+              Guía de Repartición de Exposición (Total: 15 min)
+            </h3>
+            <span className="text-xs text-slate-500">
+              Haz clic en cualquier fila para ir a esa diapositiva
+            </span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="border-b border-slate-200 text-slate-500">
+                  <th className="py-2 pr-3 font-semibold">#</th>
+                  <th className="py-2 pr-3 font-semibold">Expositor</th>
+                  <th className="py-2 pr-3 font-semibold">Nivel / Enfoque</th>
+                  <th className="py-2 pr-3 font-semibold">Tiempo</th>
+                  <th className="py-2 font-semibold">Puntos clave a sustentar</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {SLIDE_ASSIGNMENTS.map((sa, idx) => (
+                  <tr
+                    key={sa.slideNumber}
+                    onClick={() => setSlideIdx(idx)}
+                    className={`cursor-pointer hover:bg-blue-50/60 ${
+                      idx === slideIdx ? 'bg-blue-50' : ''
+                    }`}
+                  >
+                    <td className="py-2 pr-3 font-mono font-bold text-[#0f294a]">
+                      {sa.slideNumber}
+                    </td>
+                    <td className="py-2 pr-3 font-semibold text-slate-800">{sa.presenter}</td>
+                    <td className="py-2 pr-3">
+                      <span
+                        className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                          sa.level.includes('Máxima')
+                            ? 'bg-orange-100 text-orange-800'
+                            : sa.level === 'Alta Dificultad'
+                              ? 'bg-blue-100 text-blue-800'
+                              : 'bg-slate-100 text-slate-700'
+                        }`}
+                      >
+                        {sa.level}
+                      </span>
+                    </td>
+                    <td className="py-2 pr-3 font-mono text-slate-600">{sa.duration}</td>
+                    <td className="py-2 text-slate-600">{sa.notes}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
       {/* Escenario de diapositiva */}
       <div
         ref={stageRef}
         className={`bg-white rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-between overflow-hidden ${
-          isFullscreen ? 'p-8 sm:p-12 h-screen' : 'p-6 sm:p-10 min-h-[540px]'
+          isFullscreen ? 'p-8 sm:p-12 h-screen' : 'p-6 sm:p-10 min-h-[560px]'
         }`}
       >
-        {/* Barra de progreso superior */}
+        {/* Barra de progreso superior y expositor asignado */}
         <div className="space-y-3">
           <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
             <div
@@ -946,16 +1035,23 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
             />
           </div>
           {slideIdx > 0 && slideIdx < totalSlides - 1 && (
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
               <div>
                 <span className="text-[11px] font-bold uppercase tracking-wider text-blue-700">
                   {current.tag}
                 </span>
                 <h3 className="text-xl font-bold text-[#0f294a]">{current.title}</h3>
               </div>
-              <span className="text-xs font-mono text-slate-400">
-                {slideIdx + 1} / {totalSlides}
-              </span>
+              <div className="flex items-center gap-2 text-xs">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#0f294a] font-semibold">
+                  <UserCheck className="w-3.5 h-3.5 text-blue-700" />
+                  {assignment.presenter}
+                </span>
+                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-slate-100 text-slate-600 font-mono">
+                  <Clock className="w-3 h-3" />
+                  {assignment.duration}
+                </span>
+              </div>
             </div>
           )}
         </div>
@@ -963,10 +1059,12 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
         {/* Contenido */}
         <div className="flex-1 py-4 flex flex-col">{current.render()}</div>
 
-        {/* Controles internos en pantalla completa */}
-        {isFullscreen && (
-          <div className="flex items-center justify-between pt-3 border-t border-slate-100 text-xs text-slate-500">
-            <span>Observatorio Hurtos Colombia · Unimayor</span>
+        {/* Pie discreto con expositor también en portada/cierre */}
+        <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-[11px] text-slate-500">
+          <span>
+            Expositor: <strong className="text-[#0f294a]">{assignment.presenter}</strong> ({assignment.level})
+          </span>
+          {isFullscreen ? (
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -985,8 +1083,12 @@ export const PresentacionModule: React.FC<PresentacionModuleProps> = ({ data }) 
                 Siguiente
               </button>
             </div>
-          </div>
-        )}
+          ) : (
+            <span className="font-mono">
+              {slideIdx + 1} / {totalSlides}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Índice rápido de diapositivas */}
